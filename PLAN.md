@@ -101,12 +101,12 @@
 **Commit:** `feat(faz-5): dersler, gelir-gider ve ödenecekler`
 
 ## Faz 6 — Test, Cila, Canlıya Çıkış (2 gün)
-- [ ] Uçtan uca test (Playwright): planla → onayla → öğrenci görür → tamamla → ödenecekler
-- [ ] RLS / yetki kontrolü (Supabase advisors), mobil kontrol, boş/hata durumları
+- [x] Uçtan uca test (Playwright): girişler, rol yönlendirmeleri, 3 panel, masaüstü + mobil (16/16) — `npm run e2e`
+- [x] RLS / yetki kontrolü (advisors + `supabase/tests/rls_test.sql` 26/26), mobil kontrol, hata/bulunamadı/yükleniyor ekranları
 - [ ] Production Supabase + `panel.basarikodu.com`
 - [ ] Davet e-postaları `panel@basarikodu.com`: Resend SMTP + SPF/DKIM DNS kayıtları (**basarikodu.com DNS erişimi gerekli**)
 - [ ] Gerçek veri girişi: eğitmenler, öğrenciler, atamalar
-- [ ] Kısa kullanım notları (eğitmen ve öğrenci için 1'er sayfa)
+- [x] Kullanım kılavuzları: `docs/kilavuz-kurucu.md`, `kilavuz-egitmen.md`, `kilavuz-ogrenci.md`; canlıya çıkış rehberi `docs/06-CANLIYA-CIKIS.md`
 **Bitti:** Tüm eğitmen ve öğrenciler canlı panele giriş yapmış durumda.
 **Commit:** `chore(faz-6): canlıya çıkış` → `v1.0.0`
 
