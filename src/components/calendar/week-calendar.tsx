@@ -8,7 +8,7 @@ import {
   UserXIcon,
   XIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { cn } from "cn";
 import { addDays, istanbulToUtc, toDateKey, type DateKey } from "@/features/lessons/rules";
 import type { CalendarLesson } from "@/features/lessons/types";
@@ -16,7 +16,7 @@ import { formatTime } from "@/lib/format";
 
 const START_HOUR = 8;
 const END_HOUR = 24;
-const HOUR_PX = 56;
+const HOUR_PX = 60;
 const DAY_NAMES = ["Pzt", "Sal", "Çar", "Per", "Cum", "Cmt", "Paz"];
 
 type Props = {
@@ -29,6 +29,14 @@ type Props = {
   /** Kartta öğrenci yerine eğitmen adını göster (öğrenci paneli) */
   showTutor?: boolean;
 };
+
+// Şu anki dakika (yalnızca istemcide; sunucuda null → hidrasyon uyumsuzluğu olmaz)
+function subscribeMinute(onChange: () => void) {
+  const id = setInterval(onChange, 30_000);
+  return () => clearInterval(id);
+}
+const currentMinute = () => Math.floor(Date.now() / 60_000);
+const serverMinute = () => null;
 
 function dayNumber(date: DateKey) {
   return Number(date.slice(8, 10));
@@ -85,25 +93,37 @@ export function WeekCalendar({
 
   const initialDay = days.includes(today) ? today : days[0];
   const [mobileDay, setMobileDay] = useState<DateKey>(initialDay);
+  const nowMinute = useSyncExternalStore(subscribeMinute, currentMinute, serverMinute);
+
+  // Izgara açılınca haftanın ilk dersinin bir saat öncesine (ders yoksa 15:00'e) kaydır
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const firstHour = lessons.length
+    ? Math.min(...lessons.map((l) => Number(formatTime(l.startsAt).slice(0, 2))))
+    : 16;
+  useEffect(() => {
+    if (scrollRef.current)
+      scrollRef.current.scrollTop = Math.max(0, (firstHour - 1 - START_HOUR) * HOUR_PX);
+  }, [firstHour]);
 
   return (
     <>
       {/* Masaüstü: saat ızgarası */}
-      <div className="hidden overflow-hidden rounded-[22px] border bg-card shadow-sm md:block">
-        <div className="grid grid-cols-[64px_repeat(7,minmax(0,1fr))] border-b">
+      <div className="hidden overflow-hidden rounded-[26px] border border-border/80 bg-card shadow-card md:block">
+        <div className="grid grid-cols-[64px_repeat(7,minmax(0,1fr))] border-b bg-linear-to-b from-secondary/60 to-card">
           <div />
           {days.map((d, i) => (
             <div
               key={d}
-              className={cn("border-l px-3 py-3 text-center", d === today && "bg-accent/60")}
+              className={cn("border-l px-3 py-3 text-center", d === today && "bg-accent/70")}
             >
               <p className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
                 {DAY_NAMES[i]}
               </p>
               <p
                 className={cn(
-                  "mx-auto mt-1 grid size-8 place-items-center rounded-full font-heading text-lg font-bold",
-                  d === today && "bg-primary text-primary-foreground",
+                  "mx-auto mt-1 grid size-9 place-items-center rounded-full font-heading text-lg font-bold",
+                  d === today &&
+                    "bg-primary text-primary-foreground shadow-[0_6px_14px_-6px_rgb(11_52_120/0.6)]",
                 )}
               >
                 {dayNumber(d)}
@@ -112,7 +132,7 @@ export function WeekCalendar({
           ))}
         </div>
 
-        <div className="max-h-[70vh] overflow-y-auto">
+        <div ref={scrollRef} className="max-h-[68vh] overflow-y-auto">
           <div
             className="relative grid grid-cols-[64px_repeat(7,minmax(0,1fr))]"
             style={{ height: (END_HOUR - START_HOUR) * HOUR_PX }}
@@ -168,6 +188,22 @@ export function WeekCalendar({
                     );
                   })}
 
+                  {d === today &&
+                    nowMinute !== null &&
+                    (() => {
+                      const top =
+                        ((nowMinute * 60_000 - dayStart) / 3_600_000 - START_HOUR) * HOUR_PX;
+                      return top > 0 && top < (END_HOUR - START_HOUR) * HOUR_PX ? (
+                        <div
+                          aria-hidden
+                          className="pointer-events-none absolute inset-x-0 z-30 h-0.5 bg-destructive/80"
+                          style={{ top }}
+                        >
+                          <span className="absolute -top-[3px] -left-[4px] size-2 rounded-full bg-destructive" />
+                        </div>
+                      ) : null;
+                    })()}
+
                   {placed.map(({ lesson: l, lane }) => {
                     const startMin = (Date.parse(l.startsAt) - dayStart) / 60_000;
                     const endMin = (Date.parse(l.endsAt) - dayStart) / 60_000;
@@ -181,7 +217,7 @@ export function WeekCalendar({
                         type="button"
                         onClick={() => onLessonClick(l)}
                         className={cn(
-                          "absolute z-10 overflow-hidden rounded-xl border border-l-4 px-2 py-1 text-left text-xs shadow-sm transition hover:z-20 hover:shadow-md",
+                          "absolute z-10 overflow-hidden rounded-xl border border-l-4 px-2 py-1.5 text-left text-xs shadow-sm transition hover:z-20 hover:-translate-y-px hover:shadow-card-hover",
                           tone.className,
                         )}
                         style={{
@@ -190,6 +226,11 @@ export function WeekCalendar({
                           left: `calc(${(lane / lanes) * 100}% + 3px)`,
                           width: `calc(${100 / lanes}% - 6px)`,
                           borderLeftColor: l.color,
+                          ...(l.displayStatus === "planned" && {
+                            backgroundColor: `color-mix(in srgb, ${l.color} 9%, white)`,
+                            borderColor: `color-mix(in srgb, ${l.color} 22%, white)`,
+                            borderLeftColor: l.color,
+                          }),
                         }}
                       >
                         <span className="flex items-center gap-1 font-semibold text-foreground">

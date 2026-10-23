@@ -6,6 +6,7 @@
 - **Yerleşim (kurucunun paylaştığı referans ekrana göre):** yüzen, köşeleri 28px yuvarlatılmış koyu lacivert yan menü (logo, panel kartı, menü, altta kullanıcı kartı); büyük "Merhaba, Ad" başlığı + uzun tarih; koyu lacivert degrade istatistik bandı (cam efektli kutular); BÜYÜK HARF aralıklı bölüm etiketleri; beyaz, geniş yuvarlatılmış kartlar.
 - **Yazı tipi:** tüm panelde **Montserrat** (gövde ve başlıklar, kurucu kararı).
 - Bileşenler: `AppShell`, `HeroStats`, `SectionLabel`, `UserAvatar`, `Logo`.
+- **Cila (24 Eki 2026):** kartlar 26px köşe + yumuşak gölge (`shadow-card`); form alanları ve butonlar 12px köşe, 44px yükseklik, odakta lacivert halka; zeminde hafif lacivert/yeşil ışık; takvim ilk derse kayar, planlı dersler branş renginde dolgulu, bugünde "şu an" çizgisi. Sistem koyu temasında `dark:` stilleri devreye girmez (`@custom-variant dark` yalnız `.dark` sınıfı).
 - Aşağıdaki tablo ilk taslaktır; güncel değerler `src/app/globals.css` içindedir.
 
 ## 1. İlke
