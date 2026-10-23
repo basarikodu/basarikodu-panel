@@ -306,3 +306,67 @@ export async function rejectChangeRequest(
   revalidateLessons();
   return ok("Talep reddedildi; ders olduğu gibi kaldı");
 }
+
+// Kurucu doğrudan düzenleme ----------------------------------------------------------
+
+const founderEditSchema = z.object({
+  status: z.enum(["planned", "completed", "no_show", "cancelled_by_student", "cancelled_by_tutor"]),
+  date: z.string().refine(isDateKey, "Tarih seçin"),
+  time: z.string().refine(isTimeValue, "Saat seçin"),
+  topic: z.string().max(1000).nullable(),
+});
+
+/** Kurucu: dersin durumunu, tarihini/saatini ve notunu onaysız günceller */
+export async function founderUpdateLesson(
+  lessonId: string,
+  _prev: ActionState,
+  fd: FormData,
+): Promise<ActionState> {
+  await requireRole("founder");
+  const parsed = founderEditSchema.safeParse({
+    status: formValue(fd, "status"),
+    date: formValue(fd, "date"),
+    time: formValue(fd, "time"),
+    topic: formValue(fd, "topic"),
+  });
+  if (!parsed.success) return zodFail(parsed.error);
+
+  const supabase = await createClient();
+  const { data: lesson } = await supabase
+    .from("lessons")
+    .select("starts_at, ends_at")
+    .eq("id", lessonId)
+    .maybeSingle();
+  if (!lesson) return fail("Ders bulunamadı");
+
+  const duration = Date.parse(lesson.ends_at) - Date.parse(lesson.starts_at);
+  const start = istanbulToUtc(parsed.data.date, parsed.data.time);
+  const { error } = await supabase
+    .from("lessons")
+    .update({
+      status: parsed.data.status,
+      topic: parsed.data.topic,
+      starts_at: start.toISOString(),
+      ends_at: new Date(start.getTime() + duration).toISOString(),
+    })
+    .eq("id", lessonId);
+  if (error) return dbFail(error);
+
+  revalidateLessons();
+  return ok("Ders güncellendi");
+}
+
+export async function founderDeleteLesson(lessonId: string): Promise<ActionState> {
+  await requireRole("founder");
+  const supabase = await createClient();
+  const { data: lesson } = await supabase
+    .from("lessons")
+    .select("payout_id")
+    .eq("id", lessonId)
+    .maybeSingle();
+  if (lesson?.payout_id) return fail("Eğitmen ödemesi yapılmış ders silinemez");
+  const { error } = await supabase.from("lessons").delete().eq("id", lessonId);
+  if (error) return dbFail(error);
+  revalidateLessons();
+  return ok("Ders silindi");
+}

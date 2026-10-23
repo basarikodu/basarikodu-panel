@@ -12,7 +12,7 @@ BaşarıKodu (online özel ders & koçluk) için 3 rollü panel: `founder` (kuru
 - Kapsam dışı istekler `PLAN.md` → BACKLOG'a yazılır, sessizce eklenmez.
 
 ## Kod kuralları
-- **Next.js 16** kullanılıyor: kod yazmadan önce `AGENTS.md` uyarısına uy, ilgili rehberi `node_modules/next/dist/docs/` içinden oku. `middleware` → `proxy.ts`; Cache Components açık (`new Date()`, cookies vb. dinamik veriler `<Suspense>` / `"use cache"` kurallarına tabi).
+- **Next.js 16** kullanılıyor: kod yazmadan önce `AGENTS.md` uyarısına uy, ilgili rehberi `node_modules/next/dist/docs/` içinden oku. `middleware` → `proxy.ts`. Cache Components **kapalı** (tüm sayfalar dinamik; ADR 10).
 - Komutlar: `npm run dev`, `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`.
 - TypeScript strict; `any` yok. DB tipleri `src/types/database.ts`'den (`supabase gen types`).
 - Okuma: Server Component + `features/<alan>/queries.ts`. Yazma: `features/<alan>/actions.ts` Server Action → zod → `requireRole()` → Supabase → `revalidatePath`.

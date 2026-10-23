@@ -21,8 +21,8 @@
 | 2 | Kurucu: eğitmen & öğrenci yönetimi, atama, **aylık paket / ders hakkı** | ✅ |
 | 3 | Eğitmen ders planlama + kurucu onay akışı | ✅ |
 | 4 | Öğrenci / veli paneli (ders hakkı kartı dahil) → **pilot** | ✅ |
-| 5 | Kurucu: dersler, gelir-gider, ödenecekler, genel bakış | ⏳ |
-| 6 | Test, cila, canlıya çıkış → **canlı** | ⬜ |
+| 5 | Kurucu: dersler, gelir-gider, ödenecekler, genel bakış | ✅ |
+| 6 | Test, cila, canlıya çıkış → **canlı** | ⏳ |
 
 ## Sizden gerekenler (beklemeye yol açmaması için erkenden)
 - **Faz 1:** Supabase hesabı/organizasyonu (ücretsiz plan yeterli) — projeyi oluşturmam için onay
@@ -91,12 +91,12 @@
 > 🎯 **Pilot:** Bu noktada 2–3 eğitmen ve öğrencileriyle gerçek kullanım başlatılabilir.
 
 ## Faz 5 — Kurucu: Dersler, Gelir-Gider, Ödenecekler (2,5 gün)
-- [ ] **Dersler:** tüm dersler liste + haftalık takvim; filtre (tarih, eğitmen, öğrenci, durum); kurucu doğrudan ekle/düzenle/iptal
-- [ ] **Gelir:** öğrenci ödemesi kaydı (öğrenci, tutar, tarih, yöntem, not); öğrenci detayında ödemeler; paket tutarı vs. ödenen → bekleyen tahsilat
-- [ ] **Ödenecekler:** hafta / ay seçimi → eğitmen başına tamamlanan ders × ortak ücret, IBAN, "Ödendi" işaretleme (hediye koçluk 0 TL)
-- [ ] **Gelir-Gider özeti:** hafta ↔ ay; gelir, gider, net
-- [ ] **Genel Bakış:** ders sayısı (yapılan/planlanan), gelir/gider/net, aktif eğitmen/öğrenci, onay bekleyen sayısı
-- [ ] Testler: hakediş hesabı (yalnızca tamamlanan dersler, hediye koçluk 0), hafta/ay sınırları
+- [x] **Dersler:** tüm dersler liste + haftalık takvim; filtre (tarih, eğitmen, öğrenci, durum); kurucu doğrudan ekle/düzenle/iptal
+- [x] **Gelir:** öğrenci ödemesi kaydı (öğrenci, tutar, tarih, yöntem, not); öğrenci detayında ödemeler; paket tutarı vs. ödenen → bekleyen tahsilat
+- [x] **Ödenecekler:** hafta / ay seçimi → eğitmen başına tamamlanan ders × ortak ücret, IBAN, "Ödendi" işaretleme (hediye koçluk 0 TL)
+- [x] **Gelir-Gider özeti:** hafta ↔ ay; gelir, gider, net
+- [x] **Genel Bakış:** ders sayısı (yapılan/planlanan), gelir/gider/net, aktif eğitmen/öğrenci, onay bekleyen sayısı
+- [x] Testler: hakediş hesabı (yalnızca tamamlanan dersler, hediye koçluk 0), hafta/ay sınırları
 **Bitti:** Bir haftalık gerçekçi senaryoda kurucular kime ne kadar ödeyeceklerini ve gelir-gideri doğru görüyor.
 **Commit:** `feat(faz-5): dersler, gelir-gider ve ödenecekler`
 

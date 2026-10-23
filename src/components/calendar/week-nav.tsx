@@ -23,7 +23,8 @@ export function WeekNav({
   weekStart: DateKey;
   currentWeek: DateKey;
 }) {
-  const href = (w: DateKey) => (w === currentWeek ? basePath : `${basePath}?hafta=${w}`);
+  const sep = basePath.includes("?") ? "&" : "?";
+  const href = (w: DateKey) => (w === currentWeek ? basePath : `${basePath}${sep}hafta=${w}`);
   return (
     <div className="flex items-center gap-2">
       <Button asChild size="icon" variant="outline" className="rounded-full bg-card">

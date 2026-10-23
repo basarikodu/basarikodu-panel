@@ -16,6 +16,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { requireRole } from "@/lib/auth";
 import { formatDate, formatLongDate, formatTime, getDayRange } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
+import { MoneyText } from "@/components/shared/money-text";
+import {
+  getFinanceSummary,
+  getOutstandingBalances,
+  getTutorPayables,
+} from "@/features/finance/queries";
+import { periodLabel, periodOf } from "@/features/finance/rules";
+import { toDateKey } from "@/features/lessons/rules";
 
 export const metadata: Metadata = { title: "Genel Bakış" };
 
@@ -28,6 +36,12 @@ export default async function FounderHomePage() {
   const now = new Date();
   const { start, end } = getDayRange(now);
 
+  const month = periodOf("ay", toDateKey(now));
+  const [finance, payables, outstanding] = await Promise.all([
+    getFinanceSummary(month),
+    getTutorPayables(month),
+    getOutstandingBalances(),
+  ]);
   const [today, pending, changeCount, students, tutors] = await Promise.all([
     supabase
       .from("lessons")
@@ -110,6 +124,45 @@ export default async function FounderHomePage() {
           },
         ]}
       />
+
+      <div className="mt-8">
+        <SectionLabel>{periodLabel(month)} · gelir-gider</SectionLabel>
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
+          {[
+            { label: "Gelir (tahsilat)", value: finance.current.income, tone: "" },
+            { label: "Gider (eğitmen)", value: finance.current.expense, tone: "" },
+            {
+              label: "Net",
+              value: finance.current.net,
+              tone: finance.current.net < 0 ? "text-destructive" : "text-success",
+            },
+            {
+              label: "Eğitmenlere ödenecek",
+              value: payables.reduce((sum, x) => sum + x.dueTotal, 0),
+              tone: "text-warning",
+              tab: "odenecekler",
+            },
+            {
+              label: "Bekleyen tahsilat",
+              value: outstanding.reduce((sum, x) => sum + x.outstanding, 0),
+              tone: "text-warning",
+              tab: "bekleyen",
+            },
+          ].map((c) => (
+            <Link
+              key={c.label}
+              href={`/kurucu/finans${c.tab ? `?sekme=${c.tab}` : ""}`}
+              className="rounded-[20px] border bg-card p-4 transition hover:shadow-md"
+            >
+              <p className="text-xs text-muted-foreground">{c.label}</p>
+              <MoneyText
+                value={c.value}
+                className={`mt-1 block font-heading text-xl font-bold ${c.tone}`}
+              />
+            </Link>
+          ))}
+        </div>
+      </div>
 
       <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div>

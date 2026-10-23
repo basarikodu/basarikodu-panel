@@ -160,7 +160,7 @@ Unique: (student_id, month).
 **payments** (öğrenciden tahsilat)
 | id, student_id, student_package_id null, amount, paid_at (date), method (`havale`,`nakit`,`kart`,`diger`), note, recorded_by |
 
-**tutor_payouts** (eğitmene ödeme dönemi — ödeme panel dışında manuel yapılır, burada kaydı tutulur)
+**tutor_payouts** (eğitmene ödeme kaydı — ödeme panel dışında manuel yapılır). **Ders bazında bağlıdır:** `lessons.payout_id` her tamamlanan dersi en fazla bir ödemeye bağlar; `mark_tutor_paid()` RPC dönemdeki ödenmemiş dersleri tek kayıtta toplar. Ödenmiş ders eğitmen tarafından değiştirilemez; kurucu önce ödemeyi geri almalıdır. Bir dönem için birden fazla ödeme olabilir (unique kaldırıldı).
 | id, tutor_id, period_start (date), period_end (date), lesson_count, lesson_total (hesaplanan), adjustment_total, amount_paid, paid_at null, status (`open`,`paid`), note |
 Unique: (tutor_id, period_start). Dönem uzunluğu eğitmenin `tutors.payout_frequency` (`weekly` | `monthly`) ayarından gelir; hafta Pazartesi–Pazar.
 

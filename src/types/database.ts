@@ -192,6 +192,7 @@ export type Database = {
           is_free: boolean;
           lesson_type: Database["public"]["Enums"]["lesson_type"];
           meeting_url: string | null;
+          payout_id: string | null;
           rejection_reason: string | null;
           series_id: string | null;
           starts_at: string;
@@ -215,6 +216,7 @@ export type Database = {
           is_free?: boolean;
           lesson_type?: Database["public"]["Enums"]["lesson_type"];
           meeting_url?: string | null;
+          payout_id?: string | null;
           rejection_reason?: string | null;
           series_id?: string | null;
           starts_at: string;
@@ -238,6 +240,7 @@ export type Database = {
           is_free?: boolean;
           lesson_type?: Database["public"]["Enums"]["lesson_type"];
           meeting_url?: string | null;
+          payout_id?: string | null;
           rejection_reason?: string | null;
           series_id?: string | null;
           starts_at?: string;
@@ -697,6 +700,16 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      mark_tutor_paid: {
+        Args: {
+          p_end: string;
+          p_note?: string;
+          p_paid_at?: string;
+          p_start: string;
+          p_tutor: string;
+        };
+        Returns: string;
+      };
       get_credit_balances: {
         Args: { p_month?: string };
         Returns: {
