@@ -1,153 +1,101 @@
 # 02 · Ürün Gereksinimleri (PRD)
 
-## 1. Roller
+> **v1 ilkesi: sade ve hızlı.** İlk sürüm yalnızca ders planlama–onay akışını ve kurucuların gelir-gider / ders takibini kapsar. Diğer her şey "v1 sonrası" listesindedir ve uygulama kullanılmaya başladıktan sonra eklenir.
 
-| Rol | Kim | Sayı | Giriş |
-|---|---|---|---|
-| `founder` (Kurucu) | Yönetici kurucular | 3 | `/kurucu` — ayrı giriş ekranı |
-| `tutor` (Eğitmen) | Özel ders hocaları ve koçlar | ~15+ | `/giris` (ortak giriş) |
-| `student` (Öğrenci / Veli) | Öğrenci; veli aynı hesabı kullanır | ~yüzlerce | `/giris` (ortak giriş) |
+## 1. Roller ve giriş
 
-- **İki giriş kapısı:** Kurucu girişi (`/kurucu/giris`) ve Eğitmen/Öğrenci girişi (`/giris`). Teknik olarak aynı kimlik sistemi; giriş sonrası role göre yönlendirme yapılır, yanlış kapıdan girişte rol kontrolü ile reddedilir.
-- **Kayıt (sign-up) yok.** Tüm hesapları kurucular oluşturur, kullanıcıya **`panel@basarikodu.com`** adresinden davet e-postası/şifre belirleme linki gider.
-- **Öğrenci ve veli aynı paneli ve aynı hesabı kullanır.** Ayrı veli hesabı yok; metinler ikisine de hitap eder.
-- Bir eğitmen hem özel ders hem koçluk verebilir (alanı: `services: ["ozel_ders","kocluk"]`).
+| Rol | Kim | Giriş |
+|---|---|---|
+| `founder` (Kurucu) | 3 kurucu | `/kurucu/giris` |
+| `tutor` (Eğitmen) | Hocalar ve koçlar | `/giris` |
+| `student` (Öğrenci / Veli) | Öğrenci; veli aynı hesabı kullanır | `/giris` |
 
-## 2. Kurucu paneli
+- Kayıt (sign-up) yok. Hesapları kurucular açar; **`panel@basarikodu.com`** adresinden davet e-postası gider, kullanıcı şifresini belirler.
+- Öğrenci ve veli **aynı hesap, aynı panel**.
 
-### K1 — Genel Bakış (Dashboard)
-- Bu hafta / bu ay: yapılan ders sayısı, planlanan ders, iptal/erteleme oranı
-- Aktif öğrenci, aktif eğitmen sayısı
-- Bu ay tahsilat, bekleyen tahsilat (vadesi geçmiş kırmızı), eğitmenlere ödenecek toplam
-- Bitmek üzere olan paketler (≤2 ders hakkı kalan öğrenciler)
-- Yaklaşan sınavlar (geri sayım) + bu haftanın içerik planı (reels)
-- Son aktiviteler (ders tamamlandı, ödeme alındı vb.)
+## 2. Kurucu paneli (v1)
 
-### K2 — Eğitmenler
-- Liste: ad, branşlar, üniversite/bölüm, YKS derecesi, aktif öğrenci sayısı, bu ay ders sayısı, durum (aktif/pasif)
-- Detay: profil, atanmış öğrenciler, ders geçmişi, hakediş geçmişi (ders ücreti **tüm eğitmenler için aynıdır**, Ayarlar'dan yönetilir)
-- Ekle / düzenle / pasife al (silme yok — geçmiş korunur), davet e-postası gönder
+### K1 — Genel Bakış
+Basit sayı kartları; **hafta ↔ ay** geçişli:
+- Yapılan ders sayısı, planlanan ders sayısı
+- Gelir (tahsilat), gider (eğitmen hakedişi), net
+- Aktif eğitmen / öğrenci sayısı
+- Onay bekleyen talep sayısı (tıklayınca listeye gider)
 
-### K3 — Öğrenciler
-- Liste: ad, sınıf, hedef (YKS/LGS/Okul), atanmış eğitmen(ler), aktif paket, kalan ders hakkı, ödeme durumu
-- Detay: veli bilgileri (ad, telefon), notlar, eğitmen atamaları (branş bazında), paketleri, ders geçmişi, ödemeleri
-- Ekle / düzenle / pasife al, davet gönder
-- **Eşleştirme:** öğrenciye branş bazında eğitmen ata (ör. Matematik → Ahmet, Koçluk → Ayşe)
+### K2 — Onay Bekleyenler
+- Eğitmenin **yeni ders, tekrarlayan ders, erteleme ve iptal** talepleri buraya düşer.
+- Her satır: eğitmen, öğrenci, branş, talep türü, eski → yeni tarih/saat, eğitmenin açıklaması.
+- **Onayla / Reddet (sebep)**; tekrarlayan seri tek tıkla toplu onay.
+- Üç kurucudan birinin onayı yeterli; kimin onayladığı kaydedilir.
 
-### K3b — Onay Bekleyenler (eğitmen talepleri)
-- Eğitmenin **ders oluşturma, tarih/saat değiştirme (erteleme) ve iptal** işlemleri doğrudan uygulanmaz; talep olarak kurucu paneline düşer.
-- Sidebar'da sayaç rozeti ("Onay Bekleyenler · 5") ve dashboard'da kart.
-- Her talep: eğitmen, öğrenci, branş, talep türü (Yeni ders / Tekrarlayan seri / Erteleme / İptal), eski → yeni tarih-saat, eğitmenin açıklaması, çakışma uyarısı.
-- **Onayla / Reddet (sebep yazılır) / Düzenleyip onayla**; tekrarlayan seri ve "haftayı kopyala" talepleri **tek tıkla toplu onay**.
-- Üç kurucudan herhangi birinin onayı yeterli; kim onayladığı kaydedilir.
-- Kurucuların kendi yaptığı ders işlemleri onaysız, doğrudan uygulanır.
+### K3 — Eğitmenler
+- Liste: ad, branşlar, öğrenci sayısı, bu hafta/ay ders sayısı, aktif/pasif
+- Ekle / düzenle (ad, telefon, e-posta, branşlar, üniversite/bölüm, IBAN) / pasife al, davet gönder
+- Detay: öğrencileri ve ders geçmişi
 
-### K4 — Dersler
-- Tüm derslerin takvimi (eğitmene / öğrenciye / branşa göre filtre) ve liste görünümü
-- Kurucu her dersi görebilir, düzenleyebilir, iptal edebilir, durumunu düzeltebilir
-- Dışa aktarma (CSV)
+### K4 — Öğrenciler
+- Liste: ad, sınıf, hedef (YKS/LGS/Okul), eğitmen(ler)i, bu ay ders sayısı
+- Ekle / düzenle (ad, sınıf, hedef, veli adı/telefonu, not) / pasife al, davet gönder
+- **Eğitmen atama:** öğrenciye branş bazında eğitmen ata (ör. Matematik → Ahmet Hoca). Eğitmen yalnızca atanan öğrencileri görür.
+- Detay: ders geçmişi, ödemeleri
 
-### K5 — Finans
-- **Paketler (tanım):** Tek Ders, Haftada 2, Haftada 3, Koçluk — fiyat ve ders adedi düzenlenebilir
-- **Öğrenci paketleri:** öğrenciye paket tanımla (başlangıç tarihi, ders hakkı, tutar, indirim) → ders tamamlandıkça hak düşer
-- **Tahsilatlar (öğrenciden):** manuel ödeme kaydı (tarih, tutar, yöntem: Havale/EFT, Nakit, Kart, Diğer; açıklama), paketle ilişkilendirme, borç/alacak bakiyesi
-- **Hakedişler (eğitmene):** seçilen dönemde (**hafta veya ay**) tamamlanan dersler × eğitmen birim ücreti = otomatik hesap; yalnızca `Tamamlandı` dersler sayılır, hediye koçluk için ekstra ödeme yok. Kurucu ödemeyi panel dışında manuel yapar ve panelde "ödendi" işaretler (tarih, tutar, not); düzeltme kalemi eklenebilir (prim/kesinti). Her eğitmenin ödeme sıklığı ayarlanabilir (haftalık / aylık).
-- **"Ödenecekler" listesi:** seçilen hafta/ay için eğitmen bazında ödenecek tutar, IBAN, ödendi/bekliyor — kurucular bu listeye bakarak havaleleri yapar
-- **Gelir-Gider görünümü (haftalık ↔ aylık geçiş):** tahsilat (gelir), eğitmen hakedişi (gider), net; aynı dönemde yapılan ders sayısı (branş/eğitmen kırılımı); önceki dönemle karşılaştırma
-- Panelde online ödeme/para transferi **yok** — sadece kayıt ve hesap
+### K5 — Dersler
+- **Ne zaman, kim, hangi ders:** tüm derslerin listesi ve haftalık takvimi
+- Filtre: tarih aralığı, eğitmen, öğrenci, durum
+- Kurucu dersi doğrudan ekleyebilir/düzenleyebilir/iptal edebilir (onaysız)
 
-### K6 — Akademik & İçerik Takvimi
-- Ay / hafta / liste görünümleri; **sürükle-bırak ile tarih değiştirme**
-- Olay türleri (renkli):
-  - **Sınav:** YKS, LGS, okul yazılı dönemleri, deneme sınavları
-  - **Okul takvimi:** dönem başlangıç/bitiş, ara tatil, yarıyıl tatili, resmi tatil
-  - **İçerik (Reels):** Tanıtım, Viral, Eğitmen Tanıtımı, Eğitici, Motivasyon, Kampanya
-  - **Kampanya / Operasyon:** ör. "Yarıyıl kampanyası", "LGS son 30 gün paketi"
-- İçerik kartı alanları: başlık, tür, durum (**Fikir → Senaryo → Çekildi → Kurgu → Hazır → Yayınlandı**), sorumlu kurucu, platform (Instagram/TikTok/YouTube Shorts), senaryo/not, yayın linki
-- **Haftalık ritim şablonu:** "Salı/Perşembe/Cumartesi" slotlarını seçilen tarih aralığına boş içerik kartı olarak oluştur
-- "Tahmini" bayrağı: resmi açıklanmamış tarihler (YKS/LGS) kesikli çerçeve ile gösterilir
-- Sınav olayları öğrenci panelindeki geri sayıma beslenir (kurucu "öğrencilere göster" işaretlerse)
-- İçerik olayları **sadece kurucular** tarafından görülür
+### K6 — Gelir-Gider ve Ödemeler (hafta ↔ ay)
+- **Gelir:** öğrenciden alınan ödemeleri manuel kaydet (öğrenci, tutar, tarih, yöntem, not)
+- **Gider / Ödenecekler:** seçilen hafta veya ayda her eğitmenin **tamamlanan ders sayısı × ortak ücret** = ödenecek tutar, IBAN, durum (Bekliyor / Ödendi)
+- Ödeme panel dışında yapılır; kurucu "Ödendi" işaretler (tarih, not)
+- Özet: toplam gelir, toplam gider, net
 
 ### K7 — Ayarlar
-- Branş listesi (Matematik, Fizik, Kimya, Biyoloji, Türkçe/Edebiyat, Tarih, Coğrafya, İngilizce, Fen Bilimleri, Sosyal Bilgiler, Koçluk…)
-- Ders tipleri ve varsayılan süreleri (Özel ders 60 dk, Koçluk 40 dk)
-- **Eğitmen ders ücretleri** — tüm eğitmenler için tek ücret (özel ders başı, ücretli koçluk başı). Değişiklik yalnızca sonraki dersleri etkiler.
-- Kurucu hesapları, şirket bilgileri
-- Aktivite günlüğü (kim neyi değiştirdi)
+- Ortak eğitmen ücreti (özel ders / ücretli koçluk), branş listesi, ders süreleri (60 / 40 dk)
 
-## 3. Eğitmen paneli
+## 3. Eğitmen paneli (v1)
 
-### E1 — Bugün / Genel Bakış
-- Bugünkü ve yarınki dersler (saat, öğrenci, branş, toplantı linki — tek tıkla "Derse Git")
-- Durumu işaretlenmemiş geçmiş dersler uyarısı ("3 dersin sonucunu girmedin")
-- Bu ay tamamlanan ders sayısı ve tahmini hakediş
+### E1 — Takvim (ana ekran, haftalık)
+- Haftalık takvim (mobilde gün listesi); bugünkü dersler üstte, "Derse Git" linki
+- **Ders planla:** öğrenci (yalnızca atanmış öğrencilerinden), branş, tip (özel ders/koçluk), tarih, saat, toplantı linki
+- **Her hafta tekrarla** seçeneği (ör. her Pazartesi 19:00, 8 hafta)
+- **Ertele / İptal et** talebi (açıklama ile)
+- Tüm bu işlemler **kurucu onayına gider**: takvimde kesikli çerçeve + "Onay bekliyor"; reddedilirse sebep görünür. Onaylanana kadar öğrenci görmez.
 
-### E2 — Takvim & Haftalık Planlama (çekirdek özellik)
-- **Onay kuralı:** Eğitmenin oluşturduğu, taşıdığı veya iptal ettiği her ders kurucu onayına gider. Onaylanana kadar takvimde kesikli çerçeveli **"Onay bekliyor"** etiketiyle görünür; öğrenci bu dersi göremez. Değişiklik talebinde eski ders geçerli kalır, üzerinde "Değişiklik onay bekliyor" rozeti olur. Reddedilen talepte eğitmen sebebi görür.
-- Hafta görünümü (varsayılan), gün ve ay görünümü
-- Boş saate tıkla → **Ders oluştur:** öğrenci (yalnızca atanmış öğrencilerinden), branş, tip (özel ders/koçluk), tarih, saat, süre, toplantı linki, not
-- **Tekrarlayan ders:** "Her Pazartesi 19:00, 8 hafta" → seri oluşturulur; seriyi veya tek oturumu düzenleme
-- **Sürükle-bırak** ile saat/gün değiştirme (çakışma kontrolü: aynı eğitmen veya aynı öğrenci için üst üste binme engellenir)
-- **"Geçen haftayı kopyala"** → haftalık planı tek tıkla bir sonraki haftaya taşı
-- Müsaitlik (opsiyonel, Faz 3 sonu): eğitmen haftalık müsait saatlerini işaretler, takvimde gölge olarak görünür
+### E2 — Ders sonucu
+- Geçmiş derste: **Tamamlandı** veya **Öğrenci gelmedi** + kısa not (işlenen konu). Onaysız kaydedilir; kurucular düzeltebilir.
+- Öğrencinin hakkı yanmaz: gelmedi/iptal durumunda ders ileri tarihe ertelenir. Yalnızca tamamlanan ders sayılır ve eğitmene ödenir.
 
-### E3 — Ders sonrası işlem
-- Dersi işaretle: **Tamamlandı / Öğrenci gelmedi / İptal (eğitmen) / İptal (öğrenci) / Ertelendi**
-- **İptal ve Ertelendi** kurucu onayına gider. **Tamamlandı / Öğrenci gelmedi** doğrudan kaydedilir (kurucular düzeltebilir).
-- Tamamlandıysa: işlenen konu, ödev, öğrenci performans notu (1–5), veliye görünür kısa not
-- Ertelendiyse: yeni tarih seç → ders hakkı yanmaz
-- **Öğrencinin hakkı hiçbir durumda yanmaz:** "Öğrenci gelmedi" / iptal / erteleme durumlarında hak düşmez; eğitmen öğrenciyle görüşüp dersi ileri bir tarihe planlar ("Yeniden planla" kısayolu). Bu derslerden eğitmene ödeme çıkmaz.
+### E3 — Öğrencilerim
+- Atanmış öğrenciler: sınıf, hedef, veli telefonu, son/sıradaki ders
+- Öğrenci detayı: o öğrenciyle yapılan dersler
 
-### E4 — Öğrencilerim
-- Atanmış öğrenci listesi: sınıf, hedef, kalan ders hakkı, son ders tarihi
-- Öğrenci detayı: ders geçmişi, konu/ödev akışı, eğitmene özel notlar (öğrenci görmez)
+## 4. Öğrenci / Veli paneli (v1)
 
-### E5 — Hakedişlerim
-- Hafta ve ay bazında tamamlanan dersler ve tutar, ödenen/bekleyen (hediye koçluklar 0 TL olarak listelenir)
+### Ö1 — Haftalık takvim (ana ekran)
+- Sıradaki ders kartı (tarih, saat, eğitmen, branş, **Derse Katıl** linki)
+- Haftalık takvimde onaylı dersler (mobilde gün listesi)
 
-## 4. Öğrenci / Veli paneli
+### Ö2 — Ders geçmişi
+- Liste: tarih, eğitmen, branş, durum, eğitmenin notu
+- Üstte basit toplam: "Toplam 24 ders · Bu ay 8 ders"
 
-### Ö1 — Ana sayfa
-- Sıradaki ders kartı (geri sayım, eğitmen, branş, **Derse Katıl** butonu)
-- YKS/LGS geri sayımı (öğrencinin hedefine göre)
-- Paket durumu: "12 dersin 7'si tamamlandı, 5 hak kaldı" ilerleme çubuğu
-- Bu haftanın dersleri
-
-### Ö2 — Takvim
-- Geçmiş ve gelecek tüm dersler (renk: branşa göre; durum ikonları)
-- Akademik takvimden öğrencilere açık olaylar (sınavlar, tatiller)
-
-### Ö3 — Ders Geçmişi
-- Liste: tarih, eğitmen, branş, süre, durum, işlenen konu, ödev, eğitmen notu
-- Özet istatistik: toplam ders, branşa göre dağılım (grafik), aylık ders sayısı
-
-### Ö4 — Ödevler & Notlar
-- Eğitmenlerin girdiği ödevler (yapıldı işaretlenebilir)
-
-### Ö5 — Araçlar
-- Pomodoro, sınav sayacı, haftalık çalışma programı (sitedeki araçların panel versiyonu)
-
-### Ö6 — Ödemeler (salt okunur)
-- Paketler, yapılan ödemeler, kalan bakiye
-
-### Ö7 — Profil & İletişim
+### Ö3 — Profil
 - Bilgiler, şifre değiştir, WhatsApp destek butonu
 
-## 5. Ortak / fonksiyonel olmayan gereksinimler
-- **Dil:** Türkçe. **Saat dilimi:** Europe/Istanbul. Para birimi TL, `1.234,56 ₺` formatı. Hafta Pazartesi başlar.
-- **Mobil uyumlu:** öğrenci ve eğitmenlerin çoğu telefondan girecek → mobil öncelikli tasarım.
-- **Güvenlik:** her rol yalnızca kendi verisine erişir (veritabanı seviyesinde Row Level Security). Eğitmen başka eğitmenin öğrencisini göremez; öğrenci sadece kendi derslerini görür; finansal tutarları sadece kurucular görür (eğitmen yalnızca kendi hakedişini).
-- **KVKK:** reşit olmayan öğrenci verisi → minimum veri, veli telefonu sadece kurucu & atanmış eğitmen görür; hesap pasife alındığında veriler anonimleştirilebilir.
-- **Performans:** ilk yükleme < 2 sn, takvim etkileşimleri anlık (optimistic update).
-- **Denetim izi:** finans ve ders durum değişiklikleri loglanır.
-- **Yedekleme:** günlük otomatik veritabanı yedeği.
+## 5. Ortak gereksinimler
+- Türkçe, Europe/Istanbul, TL (`1.234,56 ₺`), hafta Pazartesi başlar
+- **Mobil uyumlu** (öğrenci ve eğitmenlerin çoğu telefondan girer)
+- Her rol yalnızca kendi verisini görür (veritabanında Row Level Security). Para tutarlarını yalnızca kurucular görür.
+- Çakışma kontrolü: aynı eğitmen veya aynı öğrenci için üst üste ders planlanamaz.
+- KVKK: minimum veri; veli telefonu yalnızca kurucu ve atanmış eğitmen tarafından görülür.
 
-## 6. Kapsam dışı (MVP sonrası backlog)
-- Siteden gelen **ön görüşme formlarının panele düşmesi** (lead/CRM hattı) — en değerli ilk eklenti
-- Online ödeme (iyzico/PayTR), otomatik fatura
-- Zoom/Google Meet API ile otomatik link üretimi, Google Calendar senkronu
-- WhatsApp/SMS hatırlatma, e-posta bildirimleri (MVP'de yalnızca davet e-postası)
-- Aylık veli ilerleme raporunun PDF olarak otomatik üretimi
-- Ayrı veli hesabı (birden fazla çocuk), mesajlaşma
-- Yapay zekâ destekli içerik fikri/senaryo, öğrenci analizi
+## 6. v1 sonrası (kullanım başladıktan sonra, öncelik sırasıyla)
+1. **Akademik & içerik takvimi** — reels planı (Sal/Per/Cmt ritmi), sürükle-bırak, YKS/LGS/yazılı tarihleri, içerik durum hattı (Fikir → Yayınlandı). Ayrıntılar ve 2026–27 tarihleri `01-PROJE-ANALIZI.md`'de hazır.
+2. Paket / ders hakkı takibi (8 / 12 derslik paketler, kalan hak, bitmek üzere uyarısı)
+3. Siteden gelen ön görüşme formlarının panele düşmesi
+4. Öğrenci için ödev takibi, sınav geri sayımı, Pomodoro, çalışma programı
+5. Eğitmen "Hakedişlerim" sayfası, sürükle-bırak ile erteleme, "haftayı kopyala"
+6. Grafikli raporlar, CSV dışa aktarma, aktivite günlüğü, koyu tema
+7. Bildirimler (e-posta/WhatsApp hatırlatma), aylık veli raporu
+8. Online ödeme, Zoom/Meet otomatik link, yapay zekâ özellikleri

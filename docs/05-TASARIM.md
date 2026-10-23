@@ -60,14 +60,18 @@ Tahmini olaylar kesikli kenarlık; yayınlanmış içerik ✓ rozeti.
 - `/kurucu/giris` — Kurucu girişi (koyu lacivert tema ile ayrışır)
 - `/sifre-belirle` — Davet / sıfırlama
 
-### Kurucu
-Dashboard · **Onay Bekleyenler** (sayaç rozetli, toplu onay) · Eğitmenler (liste, detay, form) · Öğrenciler (liste, detay, form, eşleştirme) · Dersler (takvim + liste) · Finans (Paketler, Öğrenci paketleri, Tahsilatlar, Hakedişler, Aylık özet) · Akademik & İçerik Takvimi · Ayarlar
+### Kurucu (v1)
+Genel Bakış · **Onay Bekleyenler** (sayaç rozetli, toplu onay) · Eğitmenler · Öğrenciler (atama dahil) · Dersler (liste + haftalık takvim) · Gelir-Gider & Ödenecekler · Ayarlar
+*v1 sonrası:* Akademik & İçerik Takvimi, Paketler
 
-### Eğitmen
-Bugün · Takvim (haftalık planlama) · Öğrencilerim (liste, detay) · Hakedişlerim · Profil
+### Eğitmen (v1)
+Takvim (haftalık planlama, ana ekran) · Öğrencilerim · Profil
 
-### Öğrenci / Veli
-Ana sayfa · Takvim · Ders geçmişi · Ödevler · Araçlar (Pomodoro, Sınav sayacı, Çalışma programı) · Ödemeler · Profil
+### Öğrenci / Veli (v1)
+Haftalık takvim (ana ekran) · Ders geçmişi · Profil
+*v1 sonrası:* Ödevler, Araçlar, Ödemeler
+
+> v1'de yalnızca açık tema; koyu tema token'ları v1 sonrası için hazır tutulur.
 
 ## 7. Ortak bileşenler
 `StatCard`, `StatusBadge`, `MoneyText`, `DateTimeText`, `EmptyState`, `PageHeader`, `DataTable`, `ConfirmDialog`, `LessonDialog` (oluştur/düzenle), `LessonResultDialog` (ders sonrası), `UserAvatar`, `SubjectChip`, `ExamCountdown`, `PackageProgress`, `CalendarView` (FullCalendar sarmalayıcı, tema uyumlu).

@@ -1,5 +1,9 @@
 # 04 · Veritabanı Şeması (Supabase / PostgreSQL)
 
+> **v1 kapsamı:** `profiles`, `tutors`, `tutor_subjects`, `students`, `subjects`, `tutor_students`, `lesson_series`, `lessons`, `lesson_change_requests`, `payments`, `tutor_payouts`, `app_settings`.
+> `lessons` tablosunda v1'de kullanılan sonuç alanları: `status`, `topic` (eğitmen notu). `homework*`, `performance`, `note_private`, `student_package_id` kolonları **v1 sonrası** eklenir.
+> **v1 sonrası:** `package_types`, `student_packages` (ders hakkı), `payout_adjustments`, `calendar_events` (akademik & içerik takvimi), `audit_log`. Bu dokümanda tasarımları hazır tutulur.
+
 ## 1. İlişki diyagramı
 
 ```mermaid
