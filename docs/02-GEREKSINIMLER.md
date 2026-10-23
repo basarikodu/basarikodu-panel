@@ -9,7 +9,8 @@
 | `student` (Öğrenci / Veli) | Öğrenci; veli aynı hesabı kullanır | ~yüzlerce | `/giris` (ortak giriş) |
 
 - **İki giriş kapısı:** Kurucu girişi (`/kurucu/giris`) ve Eğitmen/Öğrenci girişi (`/giris`). Teknik olarak aynı kimlik sistemi; giriş sonrası role göre yönlendirme yapılır, yanlış kapıdan girişte rol kontrolü ile reddedilir.
-- **Kayıt (sign-up) yok.** Tüm hesapları kurucular oluşturur, kullanıcıya davet e-postası/şifre belirleme linki gider.
+- **Kayıt (sign-up) yok.** Tüm hesapları kurucular oluşturur, kullanıcıya **`panel@basarikodu.com`** adresinden davet e-postası/şifre belirleme linki gider.
+- **Öğrenci ve veli aynı paneli ve aynı hesabı kullanır.** Ayrı veli hesabı yok; metinler ikisine de hitap eder.
 - Bir eğitmen hem özel ders hem koçluk verebilir (alanı: `services: ["ozel_ders","kocluk"]`).
 
 ## 2. Kurucu paneli
@@ -24,7 +25,7 @@
 
 ### K2 — Eğitmenler
 - Liste: ad, branşlar, üniversite/bölüm, YKS derecesi, aktif öğrenci sayısı, bu ay ders sayısı, durum (aktif/pasif)
-- Detay: profil, ders ücreti (eğitmene ödenen birim ücret — ders tipine göre), atanmış öğrenciler, ders geçmişi, hakediş geçmişi
+- Detay: profil, atanmış öğrenciler, ders geçmişi, hakediş geçmişi (ders ücreti **tüm eğitmenler için aynıdır**, Ayarlar'dan yönetilir)
 - Ekle / düzenle / pasife al (silme yok — geçmiş korunur), davet e-postası gönder
 
 ### K3 — Öğrenciler
@@ -32,6 +33,14 @@
 - Detay: veli bilgileri (ad, telefon), notlar, eğitmen atamaları (branş bazında), paketleri, ders geçmişi, ödemeleri
 - Ekle / düzenle / pasife al, davet gönder
 - **Eşleştirme:** öğrenciye branş bazında eğitmen ata (ör. Matematik → Ahmet, Koçluk → Ayşe)
+
+### K3b — Onay Bekleyenler (eğitmen talepleri)
+- Eğitmenin **ders oluşturma, tarih/saat değiştirme (erteleme) ve iptal** işlemleri doğrudan uygulanmaz; talep olarak kurucu paneline düşer.
+- Sidebar'da sayaç rozeti ("Onay Bekleyenler · 5") ve dashboard'da kart.
+- Her talep: eğitmen, öğrenci, branş, talep türü (Yeni ders / Tekrarlayan seri / Erteleme / İptal), eski → yeni tarih-saat, eğitmenin açıklaması, çakışma uyarısı.
+- **Onayla / Reddet (sebep yazılır) / Düzenleyip onayla**; tekrarlayan seri ve "haftayı kopyala" talepleri **tek tıkla toplu onay**.
+- Üç kurucudan herhangi birinin onayı yeterli; kim onayladığı kaydedilir.
+- Kurucuların kendi yaptığı ders işlemleri onaysız, doğrudan uygulanır.
 
 ### K4 — Dersler
 - Tüm derslerin takvimi (eğitmene / öğrenciye / branşa göre filtre) ve liste görünümü
@@ -63,6 +72,7 @@
 ### K7 — Ayarlar
 - Branş listesi (Matematik, Fizik, Kimya, Biyoloji, Türkçe/Edebiyat, Tarih, Coğrafya, İngilizce, Fen Bilimleri, Sosyal Bilgiler, Koçluk…)
 - Ders tipleri ve varsayılan süreleri (Özel ders 60 dk, Koçluk 40 dk)
+- **Eğitmen ders ücretleri** — tüm eğitmenler için tek ücret (özel ders başı, ücretli koçluk başı). Değişiklik yalnızca sonraki dersleri etkiler.
 - Kurucu hesapları, şirket bilgileri
 - Aktivite günlüğü (kim neyi değiştirdi)
 
@@ -74,6 +84,7 @@
 - Bu ay tamamlanan ders sayısı ve tahmini hakediş
 
 ### E2 — Takvim & Haftalık Planlama (çekirdek özellik)
+- **Onay kuralı:** Eğitmenin oluşturduğu, taşıdığı veya iptal ettiği her ders kurucu onayına gider. Onaylanana kadar takvimde kesikli çerçeveli **"Onay bekliyor"** etiketiyle görünür; öğrenci bu dersi göremez. Değişiklik talebinde eski ders geçerli kalır, üzerinde "Değişiklik onay bekliyor" rozeti olur. Reddedilen talepte eğitmen sebebi görür.
 - Hafta görünümü (varsayılan), gün ve ay görünümü
 - Boş saate tıkla → **Ders oluştur:** öğrenci (yalnızca atanmış öğrencilerinden), branş, tip (özel ders/koçluk), tarih, saat, süre, toplantı linki, not
 - **Tekrarlayan ders:** "Her Pazartesi 19:00, 8 hafta" → seri oluşturulur; seriyi veya tek oturumu düzenleme
@@ -83,6 +94,7 @@
 
 ### E3 — Ders sonrası işlem
 - Dersi işaretle: **Tamamlandı / Öğrenci gelmedi / İptal (eğitmen) / İptal (öğrenci) / Ertelendi**
+- **İptal ve Ertelendi** kurucu onayına gider. **Tamamlandı / Öğrenci gelmedi** doğrudan kaydedilir (kurucular düzeltebilir).
 - Tamamlandıysa: işlenen konu, ödev, öğrenci performans notu (1–5), veliye görünür kısa not
 - Ertelendiyse: yeni tarih seç → ders hakkı yanmaz
 - **Öğrencinin hakkı hiçbir durumda yanmaz:** "Öğrenci gelmedi" / iptal / erteleme durumlarında hak düşmez; eğitmen öğrenciyle görüşüp dersi ileri bir tarihe planlar ("Yeniden planla" kısayolu). Bu derslerden eğitmene ödeme çıkmaz.

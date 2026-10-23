@@ -13,6 +13,7 @@ erDiagram
   students ||--o{ lessons : ""
   subjects ||--o{ lessons : ""
   lesson_series ||--o{ lessons : ""
+  lessons ||--o{ lesson_change_requests : "onay talebi"
   package_types ||--o{ student_packages : ""
   students ||--o{ student_packages : ""
   student_packages ||--o{ lessons : "hak düşer"
@@ -46,8 +47,6 @@ erDiagram
 | bio | text null | |
 | services | text[] | `ozel_ders`, `kocluk` |
 | default_meeting_url | text null | Kişisel Zoom/Meet odası |
-| rate_private | numeric(10,2) | Özel ders başı eğitmen ücreti |
-| rate_coaching | numeric(10,2) | Koçluk başı eğitmen ücreti |
 | iban | text null | Sadece kurucu + kendisi görür |
 | payout_frequency | enum (`weekly`,`monthly`) default `monthly` | Ödeme sıklığı |
 
@@ -82,6 +81,9 @@ Unique: (tutor_id, student_id, subject_id) aktifken.
 | lesson_type | enum (`ozel_ders`,`kocluk`) | |
 | starts_at, ends_at | timestamptz | |
 | status | enum `lesson_status`: `planned`, `completed`, `no_show`, `cancelled_by_student`, `cancelled_by_tutor`, `postponed` | |
+| approval_status | enum `approval_status`: `pending`, `approved`, `rejected` | Eğitmen oluşturursa `pending`, kurucu oluşturursa `approved` |
+| approved_by, approved_at | uuid null, timestamptz null | Onaylayan kurucu |
+| rejection_reason | text null | |
 | meeting_url | text null | |
 | student_package_id | uuid null | Hakkın düştüğü paket |
 | is_free | bool default false | Hediye koçluk |
@@ -100,11 +102,32 @@ Kısıtlar:
 ```sql
 alter table lessons add constraint no_tutor_overlap
   exclude using gist (tutor_id with =, tstzrange(starts_at, ends_at) with &&)
-  where (status = 'planned');
+  where (status = 'planned' and approval_status <> 'rejected');
 alter table lessons add constraint no_student_overlap
   exclude using gist (student_id with =, tstzrange(starts_at, ends_at) with &&)
-  where (status = 'planned');
+  where (status = 'planned' and approval_status <> 'rejected');
 ```
+
+**lesson_change_requests** — eğitmenin onaylanmış bir ders üzerindeki erteleme/iptal talepleri (ders, onaya kadar değişmez)
+| Kolon | Tip | Not |
+|---|---|---|
+| id | uuid PK | |
+| lesson_id | uuid → lessons | |
+| request_type | enum: `reschedule`, `cancel` | |
+| new_starts_at, new_ends_at | timestamptz null | reschedule için |
+| cancel_status | lesson_status null | `cancelled_by_student` / `cancelled_by_tutor` |
+| reason | text | Eğitmenin açıklaması |
+| status | approval_status | `pending` → `approved`/`rejected` |
+| requested_by | uuid | |
+| reviewed_by, reviewed_at | uuid null, timestamptz null | |
+| review_note | text null | Red sebebi |
+Kısıt: bir derste aynı anda tek `pending` talep (partial unique index).
+
+Yeni ders ve seri talepleri ayrı tabloda tutulmaz: `lessons.approval_status = 'pending'` satırlarıdır; seri talepleri `series_id` ile gruplanıp toplu onaylanır.
+
+**app_settings** — tek satırlık genel ayarlar
+| tutor_rate_private numeric(10,2) | tutor_rate_coaching numeric(10,2) | lesson_duration_private (60) | lesson_duration_coaching (40) | updated_by, updated_at |
+Eğitmen ücreti **tüm eğitmenler için aynıdır**; değişiklik sadece sonraki onaylanan dersleri etkiler (snapshot).
 İndeksler: (tutor_id, starts_at), (student_id, starts_at), (status, starts_at).
 
 ### Finans
@@ -153,7 +176,9 @@ Haftalık/aylık gelir-gider raporu ayrı tablo değil, view/RPC: `finance_summa
 - `handle_new_user()` — auth.users insert → profiles satırı (rol, davetteki metadata'dan)
 - `custom_access_token_hook()` — JWT'ye `user_role` claim ekler
 - `apply_lesson_credit()` — ders **yalnızca `completed`** olunca (veya `completed`'dan geri alınınca) `student_packages.used_count` güncellenir (aktif ve hakkı olan en eski paket otomatik seçilir). `no_show` / iptal / erteleme hak düşürmez.
-- `set_tutor_rate_snapshot()` — lesson insert'te eğitmen ücretini kopyalar; `is_free=true` (hediye koçluk) ise 0
+- `set_tutor_rate_snapshot()` — ders onaylandığında `app_settings`'teki ortak ücreti kopyalar; `is_free=true` (hediye koçluk) ise 0
+- `force_pending_for_tutor()` — eğitmenin insert ettiği derste `approval_status`'ü zorla `pending` yapar (istemciye güvenilmez)
+- `approve_lesson_request(request_id | lesson_ids[])` / `reject_lesson_request(..., reason)` — yalnızca founder; talebi atomik uygular (erteleme → saat değişir, iptal → status değişir), çakışma varsa hata döner
 - `compute_payout(tutor_id, period_start, period_end)` — RPC; dönemdeki `completed` derslerin toplamı
 - `guard_locked_period()` — ödenmiş dönemdeki dersin eğitmen tarafından değiştirilmesini engeller
 
@@ -167,7 +192,9 @@ Yardımcı fonksiyonlar: `auth_role()` (JWT claim), `is_founder()`, `auth.uid()`
 | tutors | tümü R/W | kendisi R/W (ücret, IBAN hariç W) | eğitmenleri R (public kolonlar — view) |
 | students | tümü R/W | atanmış öğrencileri R (founder_notes hariç — view) | kendisi R |
 | tutor_students | R/W | kendi satırları R | kendi satırları R |
-| lessons | R/W | kendi dersleri R/W; insert yalnızca atanmış öğrenciye; `note_private` | kendi dersleri R; yalnızca `homework_done` W |
+| lessons | R/W | kendi dersleri R; insert yalnızca atanmış öğrenciye ve `pending`; update yalnızca sonuç alanları (completed/no_show, konu, ödev, notlar) — saat/iptal değişikliği yok | kendi **onaylı** dersleri R; yalnızca `homework_done` W |
+| lesson_change_requests | R/W | kendi derslerine insert + R | — |
+| app_settings | R/W | R (ücret — kendi hakedişi için) | — |
 | lesson_series | R/W | kendi R/W | — |
 | package_types | R/W | — | R |
 | student_packages | R/W | atanmış öğrencinin kalan hakkı (view, tutar yok) | kendisi R |

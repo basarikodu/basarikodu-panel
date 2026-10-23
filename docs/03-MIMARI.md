@@ -67,6 +67,7 @@ supabase/
 ## 3. Kimlik doğrulama ve yetkilendirme
 - Supabase Auth (e-posta + şifre). Public sign-up **kapalı**.
 - Kurucu yeni kullanıcı ekler → sunucu tarafında `service_role` ile `auth.admin.inviteUserByEmail` → kullanıcı `/sifre-belirle` sayfasında şifresini oluşturur.
+- Davet ve şifre sıfırlama e-postaları **`panel@basarikodu.com`** adresinden gider: Supabase Auth → özel SMTP (Resend), `basarikodu.com` için SPF/DKIM DNS kayıtları, Türkçe e-posta şablonları.
 - Rol bilgisi `profiles.role` tablosunda; JWT custom claim (Auth Hook) ile token'a da yazılır → RLS politikaları hızlı çalışır.
 - `middleware.ts`: oturumsuz → giriş sayfasına; `/kurucu/*` yalnızca founder, `/egitmen/*` yalnızca tutor, `/ogrenci/*` yalnızca student.
 - **Asıl güvenlik RLS'dedir**; middleware sadece yönlendirme kolaylığıdır.
@@ -81,6 +82,8 @@ supabase/
 5. **Kilit:** Hakedişi "ödendi" olarak kapatılmış dönemdeki dersler eğitmen tarafından değiştirilemez (sadece kurucu).
 6. **Tekrarlayan dersler:** Seri `lesson_series` tablosunda tutulur, oturumlar gerçek `lessons` satırları olarak üretilir (en fazla 16 hafta ileriye) → raporlama basit kalır, tek oturum bağımsız düzenlenebilir.
 7. **Zaman:** Tüm zamanlar DB'de `timestamptz` (UTC), arayüzde Europe/Istanbul.
+8. **Kurucu onayı:** Eğitmenin yeni ders/seri oluşturması `lessons.approval_status = 'pending'` olarak kaydedilir; eğitmenin erteleme ve iptal işlemleri dersi değiştirmez, `lesson_change_requests` tablosuna talep yazar. Kurucu onayında talep tek bir DB fonksiyonu (`approve_lesson_request`) ile atomik uygulanır. `pending` dersler çakışma kontrolüne dahildir (aynı saat iki kez talep edilemez), öğrenciye gösterilmez. Kurucu işlemleri doğrudan `approved`.
+9. **Eğitmen ücreti tektir:** `app_settings` tablosundaki özel ders ve koçluk ücreti tüm eğitmenlere uygulanır; ders onaylandığında snapshot alınır.
 
 ## 5. Ortamlar
 | Ortam | Kullanım |
@@ -101,3 +104,5 @@ Gizli değişkenler: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 | 5 | Manuel ödeme kaydı | Online ödeme | Brifing: entegrasyon yok; ödeme yöntemleri ön görüşmede belirleniyor |
 | 6 | Tekrarlayan dersler gerçek satır | RRULE ile sanal üretim | Raporlama, hak düşümü ve hakediş hesabı basit ve doğru |
 | 7 | FullCalendar | react-big-calendar, kendi takvimimiz | En olgun sürükle-bırak + zaman ızgarası, hızlı teslim |
+| 8 | Eğitmen ders işlemleri kurucu onayına bağlı | Eğitmen serbest | Kurucu kararı: ders planı ve iptaller merkezi kontrol altında |
+| 9 | Tek eğitmen ücreti (`app_settings`) | Eğitmen başına ücret | Kurucu kararı: tüm eğitmenlere aynı ücret |

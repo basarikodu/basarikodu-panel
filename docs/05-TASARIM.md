@@ -24,6 +24,9 @@ Fontlar: **Plus Jakarta Sans** (başlık, sayılar), **DM Sans** (gövde) — `n
 ## 3. Ders durumu renkleri
 | Durum | Renk | İkon |
 |---|---|---|
+| Onay bekliyor | sarı, **kesikli çerçeve**, yarı saydam | Hourglass |
+| Değişiklik onay bekliyor | normal renk + sarı rozet | CalendarClock |
+| Reddedildi (yalnızca eğitmen görür) | kırmızı çizili | Ban |
 | Planlandı | lacivert | Clock |
 | Tamamlandı | yeşil | CheckCircle |
 | Öğrenci gelmedi | turuncu | UserX |
@@ -58,7 +61,7 @@ Tahmini olaylar kesikli kenarlık; yayınlanmış içerik ✓ rozeti.
 - `/sifre-belirle` — Davet / sıfırlama
 
 ### Kurucu
-Dashboard · Eğitmenler (liste, detay, form) · Öğrenciler (liste, detay, form, eşleştirme) · Dersler (takvim + liste) · Finans (Paketler, Öğrenci paketleri, Tahsilatlar, Hakedişler, Aylık özet) · Akademik & İçerik Takvimi · Ayarlar
+Dashboard · **Onay Bekleyenler** (sayaç rozetli, toplu onay) · Eğitmenler (liste, detay, form) · Öğrenciler (liste, detay, form, eşleştirme) · Dersler (takvim + liste) · Finans (Paketler, Öğrenci paketleri, Tahsilatlar, Hakedişler, Aylık özet) · Akademik & İçerik Takvimi · Ayarlar
 
 ### Eğitmen
 Bugün · Takvim (haftalık planlama) · Öğrencilerim (liste, detay) · Hakedişlerim · Profil

@@ -1,7 +1,7 @@
 # PLAN — BaşarıKodu Panel
 
-> Başlangıç: 26 Ekim 2026 (Pazartesi) · Hedef canlı tarih: **27 Kasım 2026** (~5 hafta, 23 iş günü)
-> **Kullanılabilir MVP (eğitmen + öğrenci ders akışı): Faz 4 sonu ≈ 10 Kasım 2026**
+> Başlangıç: 26 Ekim 2026 (Pazartesi) · Hedef canlı tarih: **30 Kasım 2026** (~5 hafta, 24 iş günü)
+> **Kullanılabilir MVP (eğitmen + öğrenci ders akışı + kurucu onayı): Faz 4 sonu ≈ 11 Kasım 2026**
 > Tahminler: 1 geliştirici + Claude Code, günde ~6 saat odaklı çalışma. Kurucu geri bildirimi her faz sonunda 1 gün içinde verilirse geçerlidir.
 
 ## Çalışma kuralı
@@ -19,13 +19,13 @@
 | 0 | Kurulum & tasarım sistemi | 1,5 gün | 26–27 Eki |
 | 1 | Veritabanı, kimlik doğrulama, roller, iskelet | 2,5 gün | 27–29 Eki |
 | 2 | Kurucu: eğitmen & öğrenci yönetimi, eşleştirme | 2,5 gün | 30 Eki–3 Kas |
-| 3 | Ders motoru + Eğitmen paneli (haftalık planlama) | 4 gün | 3–6 Kas |
-| 4 | Öğrenci / veli paneli | 2 gün | 9–10 Kas |
-| 5 | Finans: paketler, tahsilat, hakediş | 3,5 gün | 11–16 Kas |
-| 6 | Akademik & içerik takvimi | 2,5 gün | 16–18 Kas |
-| 7 | Kurucu dashboard & raporlar | 1,5 gün | 19–20 Kas |
-| 8 | Cila, güvenlik, test, canlıya çıkış | 3 gün | 23–27 Kas |
-| **Toplam** | | **~23 iş günü** | |
+| 3 | Ders motoru + Eğitmen paneli (haftalık planlama) + **kurucu onay akışı** | 5 gün | 3–9 Kas |
+| 4 | Öğrenci / veli paneli | 2 gün | 10–11 Kas |
+| 5 | Finans: paketler, tahsilat, hakediş | 3,5 gün | 12–17 Kas |
+| 6 | Akademik & içerik takvimi | 2,5 gün | 17–19 Kas |
+| 7 | Kurucu dashboard & raporlar | 1,5 gün | 20–23 Kas |
+| 8 | Cila, güvenlik, test, canlıya çıkış | 3 gün | 24–30 Kas |
+| **Toplam** | | **~24 iş günü** | |
 
 > Hızlandırma seçeneği: Faz 6 (akademik takvim) Faz 3'ten bağımsızdır; ikinci bir kişi/oturum ile paralel yürütülürse toplam ~4 haftaya iner.
 
@@ -60,16 +60,16 @@
 **Commit:** `feat(faz-1): veritabanı şeması, auth ve rol bazlı iskelet`
 
 ## Faz 2 — Kurucu: Eğitmen & Öğrenci Yönetimi (2,5 gün)
-- [ ] Eğitmenler: liste (arama, filtre), detay, ekle/düzenle formu (branşlar, hizmetler, ücretler, IBAN, toplantı linki), pasife al
+- [ ] Eğitmenler: liste (arama, filtre), detay, ekle/düzenle formu (branşlar, hizmetler, IBAN, ödeme sıklığı, toplantı linki), pasife al
 - [ ] Öğrenciler: liste, detay, ekle/düzenle (sınıf, hedef, veli bilgisi, kurucu notu), pasife al
 - [ ] **Davet akışı:** kullanıcı oluştur → davet e-postası (Supabase Auth, Türkçe şablon) → şifre belirleme
 - [ ] **Eşleştirme:** öğrenci detayında "Eğitmen ata" (branş + hizmet), aktif/pasif eşleşmeler
-- [ ] Ayarlar: branş listesi (renkli), ders tipi süreleri
+- [ ] Ayarlar: branş listesi (renkli), ders tipi süreleri, **ortak eğitmen ders ücreti** (özel ders / koçluk)
 - [ ] Audit log yazımı (kullanıcı & eşleştirme değişiklikleri)
 **Bitti tanımı:** Kurucu gerçek bir eğitmen ve öğrenci ekleyip eşleştirebiliyor, davet e-postası ulaşıyor, eğitmen ilk girişini yapabiliyor.
 **Commit:** `feat(faz-2): kurucu kullanıcı yönetimi ve eşleştirme`
 
-## Faz 3 — Ders Motoru + Eğitmen Paneli (4 gün) ⭐ çekirdek
+## Faz 3 — Ders Motoru + Eğitmen Paneli + Kurucu Onayı (5 gün) ⭐ çekirdek
 - [ ] `features/lessons`: şemalar, sorgular, actions, `rules.ts` (çakışma, durum geçişleri) + unit testler
 - [ ] `CalendarView` (FullCalendar: hafta/gün/ay/liste, tr locale, Pazartesi başlangıç, 07:00–24:00, tema uyumlu)
 - [ ] Eğitmen **Takvim:** boş slota tıkla → `LessonDialog` (atanmış öğrenci seçimi, branş, tip, saat, süre, link)
@@ -80,8 +80,12 @@
 - [ ] Eğitmen **Bugün** sayfası: bugünkü/yarınki dersler, "Derse Git", sonuç girilmemiş ders uyarısı
 - [ ] **Öğrencilerim:** liste + detay (ders geçmişi, konu/ödev akışı, özel notlar)
 - [ ] Kurucu **Dersler** sayfası: tüm dersler takvim + tablo, filtreler, düzenleme, CSV dışa aktarma
-- [ ] Playwright: eğitmen ders oluşturur → taşır → tamamlar
-**Bitti tanımı:** Eğitmen bir öğrencisine 4 haftalık plan çıkarabiliyor, dersleri sürükleyip taşıyabiliyor, sonuç girebiliyor; çakışmalar engelleniyor; kurucu tümünü görüyor.
+- [ ] **Onay akışı:** eğitmenin yeni ders / seri / erteleme / iptal işlemleri talep olarak kaydedilir (`approval_status`, `lesson_change_requests`), DB tarafında zorunlu
+- [ ] Eğitmen takviminde "Onay bekliyor" (kesikli) ve "Değişiklik onay bekliyor" gösterimi, reddedilen talepte sebep
+- [ ] Kurucu **Onay Bekleyenler** ekranı: sayaç rozeti, talep detayı (eski → yeni), çakışma uyarısı, Onayla / Reddet (sebep) / Düzenleyip onayla, seriye **toplu onay**
+- [ ] Öğrenci yalnızca onaylı dersleri görür (RLS testi)
+- [ ] Playwright: eğitmen ders oluşturur → kurucu onaylar → eğitmen erteleme ister → kurucu onaylar → eğitmen tamamlar
+**Bitti tanımı:** Eğitmen bir öğrencisine 4 haftalık plan talep edebiliyor, kurucu tek tıkla onaylıyor; erteleme/iptal kurucu onayından geçiyor; çakışmalar engelleniyor; öğrenci yalnızca onaylı dersleri görüyor.
 **Commit:** `feat(faz-3): ders motoru ve eğitmen haftalık planlama`
 
 ## Faz 4 — Öğrenci / Veli Paneli (2 gün)
@@ -135,7 +139,8 @@
 - [ ] Erişilebilirlik (klavye, kontrast), boş/hata/yükleniyor durumları
 - [ ] Performans: sorgu indeksleri, sayfa yükleme ölçümü
 - [ ] KVKK: aydınlatma metni linki, veri minimizasyonu kontrolü
-- [ ] Production Supabase + `panel.basarikodu.com` alan adı, SMTP (davet e-postaları için özel gönderici)
+- [ ] Production Supabase + `panel.basarikodu.com` alan adı
+- [ ] Davet e-postaları **`panel@basarikodu.com`** üzerinden: Resend SMTP + `basarikodu.com` SPF/DKIM DNS kayıtları + Türkçe şablonlar (DNS erişimi kuruculardan gerekli)
 - [ ] Günlük yedekleme doğrulama, hata izleme (Vercel logs)
 - [ ] Gerçek veri girişi: 14 eğitmen, mevcut öğrenciler, aktif paketler
 - [ ] Kısa kullanım kılavuzları: `docs/kilavuz-egitmen.md`, `docs/kilavuz-ogrenci.md`
@@ -159,12 +164,18 @@
 - ✅ **Gelir-gider ve dersler haftalık ve aylık** görüntülenebilir; eğitmen ödemeleri haftalık veya aylık yapılabilir.
 - ✅ **Hediye koçluk için eğitmene ekstra ödeme yok.**
 - ✅ Yapılmayan ders (gelmedi/iptal/ertelendi) için eğitmene ödeme yok.
+- ✅ **Eğitmen ders ücreti tüm eğitmenler için aynı** (Ayarlar'dan tek yerden yönetilir).
+- ✅ **Öğrenci ve veli aynı panel ve aynı hesap.**
+- ✅ **Eğitmenin ders oluşturma, erteleme ve iptal işlemleri kurucu onayına bağlı;** eğitmende "Onay bekliyor" yazar, talepler kurucu panelinde "Onay Bekleyenler"e düşer.
+- ✅ Davet e-postaları **`panel@basarikodu.com`** adresinden gider.
+
+## Varsayımlar (aksi söylenmedikçe)
+- Ders sonucu (**Tamamlandı / Öğrenci gelmedi**), konu, ödev ve notlar onaysız kaydedilir; kurucular gerekirse düzeltir. (Her ders için onay istemek kurucu iş yükünü çok artırır.)
+- Üç kurucudan herhangi birinin onayı yeterlidir.
+- Ücretli koçluk görüşmesi için ayrı (ortak) bir eğitmen ücreti tanımlanır.
 
 ## Açık sorular
-1. Eğitmen ücretleri eğitmene göre mi değişiyor, yoksa herkese sabit mi? Ücretli koçluk görüşmesinin eğitmen ücreti farklı mı? (Varsayılan: eğitmen bazında ayarlanabilir)
-2. Velinin ayrı hesabı gerekecek mi? (Varsayılan: öğrenci hesabını ortak kullanır)
-3. Eğitmen, kurucu onayı olmadan ders iptal/erteleme yapabilmeli mi? (Varsayılan: evet, loglanır)
-4. Hangi e-posta adresinden davet gönderilecek (ör. `panel@basarikodu.com`)?
+- Şu an yok. Faz 8 için `basarikodu.com` DNS paneline erişim gerekecek (e-posta doğrulama kayıtları).
 
 ## BACKLOG (v1 sonrası)
 - Siteden gelen ön görüşme formlarının panele düşmesi (lead takibi) — **öneri: v1.1'in ilk işi**
