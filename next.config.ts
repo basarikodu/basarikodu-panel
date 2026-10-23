@@ -1,9 +1,8 @@
 import type { NextConfig } from "next";
 
+// Cache Components kapalı: panelin tüm sayfaları kullanıcıya özel ve dinamik
+// (docs/03-MIMARI.md, ADR 10).
 const nextConfig: NextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
   turbopack: {
     rules: {
       "*.css": {

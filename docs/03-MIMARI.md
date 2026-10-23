@@ -106,3 +106,6 @@ Gizli değişkenler: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 | 7 | FullCalendar | react-big-calendar, kendi takvimimiz | En olgun sürükle-bırak + zaman ızgarası, hızlı teslim |
 | 8 | Eğitmen ders işlemleri kurucu onayına bağlı | Eğitmen serbest | Kurucu kararı: ders planı ve iptaller merkezi kontrol altında |
 | 9 | Tek eğitmen ücreti (`app_settings`) | Eğitmen başına ücret | Kurucu kararı: tüm eğitmenlere aynı ücret |
+| 10 | Next 16 Cache Components kapalı | Açık + Suspense/`use cache: private` | Tüm sayfalar kullanıcıya özel; klasik dinamik render daha basit ve hızlı geliştirilir |
+| 11 | Rol `profiles` tablosundan okunur (JWT hook yok) | Custom access token hook | Dashboard ayarı gerektirmez; `private.is_founder()` STABLE fonksiyonu yeterince hızlı |
+| 12 | Profil satırlarını sunucu (service role) oluşturur, auth trigger yok | `handle_new_user` trigger | Rolün kullanıcı metadata'sından sızdırılmasını önler |
