@@ -30,11 +30,11 @@ export function AppShell({
       {/* Masaüstü: yüzen koyu yan menü */}
       <aside className="sticky top-0 hidden h-svh w-[296px] shrink-0 p-4 md:block">
         <div className="flex h-full flex-col rounded-[28px] bg-gradient-to-b from-[#0d1f4d] via-sidebar to-[#081331] p-4 text-sidebar-foreground shadow-xl shadow-[#0b1a40]/20">
-          <Link href={home} className="px-2 pt-1 pb-4">
+          <Link href={home} className="px-2 pt-1 pb-3 [@media(max-height:820px)]:pb-2">
             <Logo inverted size={38} />
           </Link>
 
-          <div className="mb-6 flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-3">
+          <div className="mb-5 flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-3 [@media(max-height:820px)]:hidden">
             <span className="grid size-10 shrink-0 place-items-center rounded-full bg-[#2e8220] text-sm font-bold text-white">
               BK
             </span>
@@ -44,11 +44,11 @@ export function AppShell({
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto">
+          <div className="min-h-0 flex-1 [scrollbar-width:none] overflow-y-auto overscroll-contain [&::-webkit-scrollbar]:hidden">
             <SidebarNav role={profile.role} badges={badges} />
           </div>
 
-          <div className="mt-4 flex items-center gap-3 border-t border-white/10 px-1 pt-4">
+          <div className="mt-3 flex items-center gap-3 border-t border-white/10 px-1 pt-3">
             <UserAvatar name={profile.fullName} className="ring-2 ring-white/15" />
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-semibold text-white">{profile.fullName}</p>
