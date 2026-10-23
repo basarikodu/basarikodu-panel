@@ -35,7 +35,7 @@ export function AppShell({
           </Link>
 
           <div className="mb-5 flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-3 [@media(max-height:820px)]:hidden">
-            <span className="grid size-10 shrink-0 place-items-center rounded-full bg-[#2e8220] text-sm font-bold text-white">
+            <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-[#3fa52d] to-[#256b19] text-sm font-extrabold text-white shadow-[0_6px_14px_-6px_rgb(46_130_32/0.7)]">
               BK
             </span>
             <div className="min-w-0">
@@ -44,6 +44,9 @@ export function AppShell({
             </div>
           </div>
 
+          <p className="px-4 pb-2 text-[11px] font-bold tracking-[0.18em] text-sidebar-foreground/45 uppercase [@media(max-height:720px)]:hidden">
+            Menü
+          </p>
           <div className="min-h-0 flex-1 [scrollbar-width:none] overflow-y-auto overscroll-contain [&::-webkit-scrollbar]:hidden">
             <SidebarNav role={profile.role} badges={badges} />
           </div>
@@ -73,7 +76,7 @@ export function AppShell({
 
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Mobil üst bar */}
-        <header className="sticky top-0 z-30 flex items-center justify-between bg-gradient-to-r from-[#0d1f4d] to-sidebar px-4 py-3 text-white md:hidden">
+        <header className="sticky top-0 z-30 flex items-center justify-between bg-gradient-to-r from-[#0d1f4d] to-sidebar px-4 py-3 text-white shadow-[0_8px_24px_-12px_rgb(11_26_64/0.5)] md:hidden">
           <Logo inverted size={32} />
           <form action={signOut}>
             <Button

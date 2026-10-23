@@ -29,9 +29,9 @@ export function SidebarNav({ role, badges }: { role: UserRole; badges?: NavBadge
             href={href}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "flex items-center gap-3.5 rounded-2xl px-4 py-3 text-[15px] font-medium transition [@media(max-height:820px)]:py-2.5",
+              "relative flex items-center gap-3.5 rounded-2xl px-4 py-3 text-[15px] font-medium transition [@media(max-height:820px)]:py-2.5",
               active
-                ? "bg-white/10 text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.06)]"
+                ? "bg-white/10 font-semibold text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.06)] before:absolute before:top-1/2 before:-left-4 before:h-6 before:w-1 before:-translate-y-1/2 before:rounded-r-full before:bg-sidebar-ring"
                 : "text-sidebar-foreground/75 hover:bg-white/5 hover:text-white",
             )}
           >
