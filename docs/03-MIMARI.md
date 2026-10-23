@@ -8,7 +8,7 @@
 | UI | **Tailwind CSS v4 + shadcn/ui** (Radix) | Hızlı, erişilebilir, profesyonel bileşenler; marka renklerine kolay uyarlanır |
 | İkonlar | lucide-react | shadcn ile uyumlu |
 | Veritabanı + Auth | **Supabase** (PostgreSQL, Auth, Row Level Security) | Hazır kimlik doğrulama + davet e-postası, rol bazlı güvenlik DB'de, ücretsiz başlangıç planı, yönetilen yedekleme |
-| Takvim | **FullCalendar 6** (daygrid, timegrid, list, interaction — MIT) | Sürükle-bırak, tekrarlayan olay gösterimi, Türkçe yerelleştirme hazır |
+| Takvim | **Kendi `WeekCalendar` bileşenimiz** | v1'de sürükle-bırak yok; markaya tam uyum, mobilde gün listesi, ek bağımlılık yok |
 | Formlar | react-hook-form + zod | Tek şema hem istemci hem sunucu doğrulaması |
 | Tablolar | TanStack Table (shadcn data-table) | Sıralama, filtre, sayfalama |
 | Grafikler | Recharts (shadcn charts) | Dashboard grafikleri |
@@ -41,7 +41,7 @@ src/
       page.tsx  takvim/  dersler/  odevler/  araclar/  odemeler/  profil/
   components/
     ui/                       # shadcn bileşenleri
-    calendar/                 # FullCalendar sarmalayıcıları
+    calendar/                 # WeekCalendar, WeekNav
     layout/                   # Sidebar, topbar, mobil menü (rol bazlı)
     shared/                   # StatCard, EmptyState, StatusBadge, MoneyText...
   features/                   # Alan bazlı modüller
@@ -103,7 +103,7 @@ Gizli değişkenler: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 | 4 | Eşleştirme kurucuda, eğitmen atanmış öğrenciden seçer | Eğitmen tüm öğrencileri seçer | İş modeli kurucu eşleştirmesine dayanıyor; veri gizliliği |
 | 5 | Manuel ödeme kaydı | Online ödeme | Brifing: entegrasyon yok; ödeme yöntemleri ön görüşmede belirleniyor |
 | 6 | Tekrarlayan dersler gerçek satır | RRULE ile sanal üretim | Raporlama, hak düşümü ve hakediş hesabı basit ve doğru |
-| 7 | FullCalendar | react-big-calendar, kendi takvimimiz | En olgun sürükle-bırak + zaman ızgarası, hızlı teslim |
+| 7 | Kendi haftalık takvim bileşenimiz (Faz 3'te revize) | FullCalendar | v1 kapsamında sürükle-bırak çıkarıldı; tasarım referansına birebir uyum ve daha hafif |
 | 8 | Eğitmen ders işlemleri kurucu onayına bağlı | Eğitmen serbest | Kurucu kararı: ders planı ve iptaller merkezi kontrol altında |
 | 9 | Tek eğitmen ücreti (`app_settings`) | Eğitmen başına ücret | Kurucu kararı: tüm eğitmenlere aynı ücret |
 | 10 | Next 16 Cache Components kapalı | Açık + Suspense/`use cache: private` | Tüm sayfalar kullanıcıya özel; klasik dinamik render daha basit ve hızlı geliştirilir |

@@ -19,8 +19,8 @@
 | 0 | Kurulum & tasarım temeli | ✅ (GitHub/Vercel/Supabase hesapları bekliyor) |
 | 1 | Veritabanı, giriş, roller, panel iskeletleri | ✅ |
 | 2 | Kurucu: eğitmen & öğrenci yönetimi, atama, **aylık paket / ders hakkı** | ✅ |
-| 3 | Eğitmen ders planlama + kurucu onay akışı | ⏳ |
-| 4 | Öğrenci / veli paneli (ders hakkı kartı dahil) → **pilot** | ⬜ |
+| 3 | Eğitmen ders planlama + kurucu onay akışı | ✅ |
+| 4 | Öğrenci / veli paneli (ders hakkı kartı dahil) → **pilot** | ⏳ |
 | 5 | Kurucu: dersler, gelir-gider, ödenecekler, genel bakış | ⬜ |
 | 6 | Test, cila, canlıya çıkış → **canlı** | ⬜ |
 
@@ -68,15 +68,15 @@
 **Commit:** `feat(faz-2): eğitmen/öğrenci yönetimi, atama ve aylık paket`
 
 ## Faz 3 — Eğitmen Ders Planlama + Kurucu Onayı (3,5 gün) ⭐ çekirdek
-- [ ] Haftalık takvim bileşeni (FullCalendar: hafta görünümü, mobilde gün listesi, Türkçe, Pazartesi başlangıç)
-- [ ] **Ders planla** formu: atanmış öğrenci, branş, tip, tarih, saat, toplantı linki; **her hafta tekrarla** (X hafta)
-- [ ] **Ertele / İptal et** talebi (açıklama ile)
-- [ ] Onay durumları takvimde: "Onay bekliyor" (kesikli), "Değişiklik onay bekliyor", reddedildi + sebep
-- [ ] Çakışma kontrolü (eğitmen ve öğrenci için) — anlaşılır uyarı
-- [ ] **Ders sonucu:** Tamamlandı / Öğrenci gelmedi + kısa not
-- [ ] **Öğrencilerim:** liste (kalan ders hakkı dahil, tutar yok) + öğrenci detayı (o öğrenciyle yapılan dersler); hakkı biten öğrenciye planlarken uyarı
-- [ ] Kurucu **Onay Bekleyenler:** liste, Onayla / Reddet (sebep), seriye toplu onay, menüde sayaç
-- [ ] İş kuralı testleri: çakışma, onay uygulama, yalnızca onaylı dersin öğrenciye görünmesi
+- [x] Haftalık takvim bileşeni (kendi bileşenimiz: saat ızgaralı hafta görünümü, mobilde gün seçici + liste, Pazartesi başlangıç)
+- [x] **Ders planla** formu: atanmış öğrenci, branş, tip, tarih, saat, toplantı linki; **her hafta tekrarla** (X hafta)
+- [x] **Ertele / İptal et** talebi (açıklama ile)
+- [x] Onay durumları takvimde: "Onay bekliyor" (kesikli), "Değişiklik onay bekliyor", reddedildi + sebep
+- [x] Çakışma kontrolü (eğitmen ve öğrenci için) — anlaşılır uyarı
+- [x] **Ders sonucu:** Tamamlandı / Öğrenci gelmedi + kısa not
+- [x] **Öğrencilerim:** liste (kalan ders hakkı dahil, tutar yok) + öğrenci detayı (o öğrenciyle yapılan dersler); hakkı biten öğrenciye planlarken uyarı
+- [x] Kurucu **Onay Bekleyenler:** liste, Onayla / Reddet (sebep), seriye toplu onay, menüde sayaç
+- [x] İş kuralı testleri: çakışma, onay uygulama, yalnızca onaylı dersin öğrenciye görünmesi
 **Bitti:** Eğitmen bir öğrencisine haftalık tekrarlı ders planlıyor → kurucu onaylıyor → eğitmen erteleme istiyor → kurucu onaylıyor → eğitmen dersi tamamlıyor.
 **Commit:** `feat(faz-3): ders planlama ve kurucu onay akışı`
 
