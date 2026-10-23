@@ -4,6 +4,10 @@ import {
   formatDateTime,
   formatMoney,
   formatTime,
+  formatMonthKey,
+  isMonthKey,
+  shiftMonthKey,
+  toMonthKey,
   getPeriodRange,
   shiftPeriod,
 } from "./format";
@@ -82,5 +86,23 @@ describe("shiftPeriod", () => {
         shiftPeriod("month", new Date("2027-01-15T12:00:00Z"), -1),
       ).start.toISOString(),
     ).toBe("2026-11-30T21:00:00.000Z");
+  });
+});
+
+describe("ay anahtarları", () => {
+  it("İstanbul saatine göre ayı bulur", () => {
+    expect(toMonthKey(new Date("2026-10-31T21:30:00Z"))).toBe("2026-11-01"); // 1 Kas 00:30 TR
+    expect(toMonthKey(new Date("2026-10-31T20:30:00Z"))).toBe("2026-10-01");
+  });
+
+  it("ay kaydırır ve yıl geçişini doğru yapar", () => {
+    expect(shiftMonthKey("2026-12-01", 1)).toBe("2027-01-01");
+    expect(shiftMonthKey("2026-01-01", -1)).toBe("2025-12-01");
+  });
+
+  it("ay adını Türkçe yazar ve biçimi doğrular", () => {
+    expect(formatMonthKey("2026-10-01")).toBe("Ekim 2026");
+    expect(isMonthKey("2026-10-01")).toBe(true);
+    expect(isMonthKey("2026-10-15")).toBe(false);
   });
 });

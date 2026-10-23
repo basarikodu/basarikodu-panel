@@ -18,8 +18,8 @@
 |---|---|---|
 | 0 | Kurulum & tasarım temeli | ✅ (GitHub/Vercel/Supabase hesapları bekliyor) |
 | 1 | Veritabanı, giriş, roller, panel iskeletleri | ✅ |
-| 2 | Kurucu: eğitmen & öğrenci yönetimi, atama, **aylık paket / ders hakkı** | ⏳ |
-| 3 | Eğitmen ders planlama + kurucu onay akışı | ⬜ |
+| 2 | Kurucu: eğitmen & öğrenci yönetimi, atama, **aylık paket / ders hakkı** | ✅ |
+| 3 | Eğitmen ders planlama + kurucu onay akışı | ⏳ |
 | 4 | Öğrenci / veli paneli (ders hakkı kartı dahil) → **pilot** | ⬜ |
 | 5 | Kurucu: dersler, gelir-gider, ödenecekler, genel bakış | ⬜ |
 | 6 | Test, cila, canlıya çıkış → **canlı** | ⬜ |
@@ -56,14 +56,14 @@
 **Commit:** `feat(faz-1): veritabanı, giriş ve rol bazlı iskelet`
 
 ## Faz 2 — Kurucu: Eğitmen & Öğrenci Yönetimi + Aylık Paket (2 gün)
-- [ ] Eğitmenler: liste, ekle/düzenle (branşlar, üniversite/bölüm, IBAN), pasife al, detay
-- [ ] Öğrenciler: liste, ekle/düzenle (sınıf, hedef, veli bilgisi, not), pasife al, detay
-- [ ] Davet e-postası → şifre belirleme
-- [ ] **Eğitmen atama:** öğrenci detayında branş bazında eğitmen ata / kaldır
-- [ ] **Aylık paket:** öğrenciye ay için paket tanımla (4 / 8 / 12 / özel ders, tutar, not); "önceki aydan devam ettir" toplu oluşturma
-- [ ] **Ders hakkı gösterimi:** öğrenci listesinde ve detayında bu ay paket / tamamlanan / devreden / **kalan hak**; ay ay ders sayısı
-- [ ] Testler: kalan hak hesabı (yalnızca tamamlanan, hediye koçluk hariç, devir)
-- [ ] Ayarlar: ortak eğitmen ücreti, branşlar, ders süreleri
+- [x] Eğitmenler: liste, ekle/düzenle (branşlar, üniversite/bölüm, IBAN), pasife al, detay
+- [x] Öğrenciler: liste, ekle/düzenle (sınıf, hedef, veli bilgisi, not), pasife al, detay
+- [x] Hesap açma: **geçici şifre** (WhatsApp ile iletilir, Profil'den değiştirilir) + şifre sıfırlama. E-posta daveti Faz 6'da SMTP ile
+- [x] **Eğitmen atama:** öğrenci detayında branş bazında eğitmen ata / kaldır
+- [x] **Aylık paket:** öğrenciye ay için paket tanımla (4 / 8 / 12 / özel ders, tutar, not); "önceki aydan devam ettir" toplu oluşturma
+- [x] **Ders hakkı gösterimi:** öğrenci listesinde ve detayında bu ay paket / tamamlanan / devreden / **kalan hak**; ay ay ders sayısı
+- [x] Testler: kalan hak hesabı (yalnızca tamamlanan, hediye koçluk hariç, devir)
+- [x] Ayarlar: ortak eğitmen ücreti, branşlar, ders süreleri
 **Bitti:** Kurucu eğitmen ve öğrenci ekleyip atama ve aylık paket tanımlayabiliyor; kalan hak doğru görünüyor; davet edilen kullanıcı giriş yapabiliyor.
 **Commit:** `feat(faz-2): eğitmen/öğrenci yönetimi, atama ve aylık paket`
 

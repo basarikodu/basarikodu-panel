@@ -48,6 +48,18 @@ export const STUDENT_GOAL_LABELS = {
 } as const;
 export type StudentGoal = keyof typeof STUDENT_GOAL_LABELS;
 
-export const PACKAGE_PRESETS = [4, 8, 12] as const;
+/** Aylık paket seçenekleri ve sitedeki fiyatlara göre önerilen tutar (kurucu değiştirebilir) */
+export const PACKAGE_PRESETS = [
+  { lessons: 4, label: "Haftada 1 · 4 ders", price: 3800 },
+  { lessons: 8, label: "Haftada 2 · 8 ders", price: 6800 },
+  { lessons: 12, label: "Haftada 3 · 12 ders", price: 9600 },
+] as const;
+
+export const PAYMENT_METHOD_LABELS = {
+  havale: "Havale / EFT",
+  nakit: "Nakit",
+  kart: "Kart",
+  diger: "Diğer",
+} as const;
 
 export const SUPPORT_WHATSAPP_URL = "https://wa.me/905392540064";
