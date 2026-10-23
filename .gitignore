@@ -46,3 +46,6 @@ supabase/.temp/
 supabase/.branches/
 playwright-report/
 test-results/
+
+# yerel notlar
+*.local.md

@@ -17,8 +17,8 @@
 | Faz | Kapsam | Durum |
 |---|---|---|
 | 0 | Kurulum & tasarım temeli | ✅ (GitHub/Vercel/Supabase hesapları bekliyor) |
-| 1 | Veritabanı, giriş, roller, panel iskeletleri | ⏳ |
-| 2 | Kurucu: eğitmen & öğrenci yönetimi, atama, **aylık paket / ders hakkı** | ⬜ |
+| 1 | Veritabanı, giriş, roller, panel iskeletleri | ✅ |
+| 2 | Kurucu: eğitmen & öğrenci yönetimi, atama, **aylık paket / ders hakkı** | ⏳ |
 | 3 | Eğitmen ders planlama + kurucu onay akışı | ⬜ |
 | 4 | Öğrenci / veli paneli (ders hakkı kartı dahil) → **pilot** | ⬜ |
 | 5 | Kurucu: dersler, gelir-gider, ödenecekler, genel bakış | ⬜ |
@@ -38,20 +38,20 @@
 - [x] Ortak bileşenler: `Logo`, `PageHeader`, `StatCard`, `StatusBadge`, `MoneyText`, `EmptyState`
 - [x] `lib/format.ts` (TL, tarih, saat — tr-TR, Europe/Istanbul) + testleri
 - [x] Vitest kurulumu; `.env.example`
-- [ ] Supabase projesi + local CLI → Faz 1 başında (hesap onayı)
+- [x] Supabase projesi bağlandı (`kovudcedviefphsesxby`)
 - [ ] GitHub repo + Vercel önizleme deploy'u → hesaplar bağlanınca
 **Bitti:** Markalı boş uygulama Vercel'de açılıyor; lint/typecheck/test yeşil.
 **Commit:** `feat(faz-0): proje iskeleti ve tasarım temeli`
 
 ## Faz 1 — Veritabanı, Giriş, Roller, İskelet (2 gün)
-- [ ] Migration'lar: profiles, tutors, students, subjects, tutor_students, lesson_series, lessons, lesson_change_requests, student_packages + student_credit_balance view, payments, tutor_payouts, app_settings ([04-VERITABANI.md](docs/04-VERITABANI.md) — v1 tabloları)
-- [ ] Çakışma kısıtları, onay trigger'ı (eğitmen dersi zorla `pending`), ücret snapshot
-- [ ] RLS politikaları + rol claim hook'u; `supabase gen types`
-- [ ] Giriş sayfaları: `/giris`, `/kurucu/giris`, `/sifre-belirle`, şifremi unuttum
-- [ ] Rol bazlı yönlendirme (`middleware.ts`, `requireRole()`)
-- [ ] 3 panel için iskelet: sidebar (masaüstü) + alt menü (mobil), çıkış
-- [ ] Seed: 3 kurucu, demo eğitmen ve öğrenciler, branşlar, ortak ücret
-- [ ] RLS testleri: her rol başkasının verisini göremiyor
+- [x] Migration'lar: profiles, tutors, students, subjects, tutor_students, lesson_series, lessons, lesson_change_requests, student_packages + student_credit_balance view, payments, tutor_payouts, app_settings ([04-VERITABANI.md](docs/04-VERITABANI.md) — v1 tabloları)
+- [x] Çakışma kısıtları, onay trigger'ı (eğitmen dersi zorla `pending`), ücret snapshot
+- [x] RLS politikaları (rol profiles tablosundan, `private.*` yardımcıları); `supabase gen types`
+- [x] Giriş sayfaları: `/giris`, `/kurucu/giris`, `/sifre-belirle`, şifremi unuttum
+- [x] Rol bazlı yönlendirme (`src/proxy.ts`, `requireRole()`)
+- [x] 3 panel için iskelet: sidebar (masaüstü) + alt menü (mobil), çıkış
+- [x] Seed: demo kurucu, 2 eğitmen, 3 öğrenci, branşlar, demo ücret (hesaplar: `supabase/demo-hesaplar.local.md`, canlıdan önce silinecek)
+- [x] RLS testleri: `supabase/tests/rls_test.sql` — 27/27 geçti
 **Bitti:** 3 demo hesapla giriş → doğru panel; yetkisiz erişim engelleniyor.
 **Commit:** `feat(faz-1): veritabanı, giriş ve rol bazlı iskelet`
 

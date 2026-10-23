@@ -64,7 +64,7 @@ erDiagram
 | goal | enum `student_goal` (`yks`,`lgs`,`okul`,`genel`) | |
 | school | text null | |
 | guardian_name, guardian_phone | text null | Veli |
-| founder_notes | text null | Sadece kurucular |
+| (founder_notes) | — | Ayrı `student_notes` tablosunda (yalnızca kurucu) |
 
 **subjects** — id, name, color, sort_order, is_active
 
