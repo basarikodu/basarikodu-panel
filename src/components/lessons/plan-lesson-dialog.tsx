@@ -28,6 +28,49 @@ export function PlanLessonDialog({
   prefill: { date: string; time: string };
   founderMode?: boolean;
 }) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-lg">
+        <DialogHeader>
+          <DialogTitle>Ders planla</DialogTitle>
+          <DialogDescription>
+            {founderMode
+              ? "Kurucu olarak eklediğiniz ders doğrudan onaylanır."
+              : "Planladığınız ders kurucu onayına gider; onaylanınca öğrenci takviminde görünür."}
+          </DialogDescription>
+        </DialogHeader>
+        <PlanLessonForm
+          key={`${prefill.date}-${prefill.time}`}
+          context={context}
+          date={prefill.date}
+          time={prefill.time}
+          founderMode={founderMode}
+          onSuccess={() => onOpenChange(false)}
+        />
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+/**
+ * Ders ekleme formu: öğrenci → branş → (tarih) saat → link.
+ * `fixedDate` verilirse tarih alanı gösterilmez (gün önceden seçilmiştir).
+ */
+export function PlanLessonForm({
+  context,
+  date,
+  time,
+  fixedDate = false,
+  founderMode = false,
+  onSuccess,
+}: {
+  context: PlanningContext;
+  date: string;
+  time: string;
+  fixedDate?: boolean;
+  founderMode?: boolean;
+  onSuccess?: () => void;
+}) {
   const students = groupByStudent(context.assignments);
   const [studentId, setStudentId] = useState(students.length === 1 ? students[0].id : "");
   const student = students.find((st) => st.id === studentId);
@@ -42,96 +85,82 @@ export function PlanLessonDialog({
     setAssignmentId(options.length === 1 ? options[0].id : "");
   }
 
+  if (context.assignments.length === 0) {
+    return (
+      <p className="rounded-xl bg-warning-soft p-4 text-sm text-warning">
+        Size henüz öğrenci atanmamış. Atamayı kurucular yapar.
+      </p>
+    );
+  }
+
+  const timeField = (
+    <TextField name="time" label="Saat" type="time" step={900} required defaultValue={time} />
+  );
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg">
-        <DialogHeader>
-          <DialogTitle>Ders planla</DialogTitle>
-          <DialogDescription>
-            {founderMode
-              ? "Kurucu olarak eklediğiniz ders doğrudan onaylanır."
-              : "Planladığınız ders kurucu onayına gider; onaylanınca öğrenci takviminde görünür."}
-          </DialogDescription>
-        </DialogHeader>
-        {context.assignments.length === 0 ? (
-          <p className="rounded-xl bg-warning-soft p-4 text-sm text-warning">
-            Size henüz öğrenci atanmamış. Atamayı kurucular yapar.
-          </p>
-        ) : (
-          <ActionForm
-            key={`${prefill.date}-${prefill.time}`}
-            action={planLessons}
-            submitLabel={founderMode ? "Dersi ekle" : "Onaya gönder"}
-            onSuccess={() => onOpenChange(false)}
-          >
-            <SelectField
-              name="student"
-              label="Öğrenci"
-              required
-              placeholder="Öğrenci seçin"
-              value={studentId}
-              onChange={(e) => selectStudent(e.target.value)}
-              options={students.map((st) => ({ value: st.id, label: st.name }))}
-            />
-            {student && student.remaining !== null && student.remaining <= 0 && (
-              <p className="flex items-start gap-2 rounded-xl bg-warning-soft p-3 text-sm text-warning">
-                <AlertTriangleIcon className="mt-0.5 size-4 shrink-0" />
-                {student.name} öğrencisinin ders hakkı kalmadı. Planlamadan önce kuruculara
-                danışın.
-              </p>
-            )}
-            {student && student.remaining !== null && student.remaining > 0 && (
-              <p className="-mt-2 text-xs text-muted-foreground">
-                Kalan ders hakkı: <b className="text-foreground">{student.remaining}</b>
-              </p>
-            )}
-            <SelectField
-              name="assignment_id"
-              label="Branş"
-              required
-              disabled={!student}
-              placeholder={student ? "Branş seçin" : "Önce öğrenci seçin"}
-              value={assignmentId}
-              onChange={(e) => setAssignmentId(e.target.value)}
-              options={(student?.options ?? []).map((o) => ({
-                value: o.id,
-                label: o.subjectName,
-              }))}
-            />
-            {selected && (
-              <p className="-mt-2 text-xs text-muted-foreground">
-                Süre: <b className="text-foreground">{context.durations[selected.lessonType]} dk</b>{" "}
-                ({LESSON_TYPE_LABELS[selected.lessonType]})
-              </p>
-            )}
-            <div className="grid grid-cols-2 gap-4">
-              <TextField
-                name="date"
-                label="Tarih"
-                type="date"
-                required
-                defaultValue={prefill.date}
-              />
-              <TextField
-                name="time"
-                label="Saat"
-                type="time"
-                step={900}
-                required
-                defaultValue={prefill.time}
-              />
-            </div>
-            <TextField
-              name="meeting_url"
-              label="Ders linki (Zoom/Meet)"
-              type="url"
-              placeholder="https://"
-              defaultValue={context.defaultMeetingUrl ?? ""}
-            />
-          </ActionForm>
-        )}
-      </DialogContent>
-    </Dialog>
+    <ActionForm
+      action={planLessons}
+      submitLabel={founderMode ? "Dersi ekle" : "Onaya gönder"}
+      onSuccess={onSuccess}
+    >
+      <SelectField
+        name="student"
+        label="Öğrenci"
+        required
+        placeholder="Öğrenci seçin"
+        value={studentId}
+        onChange={(e) => selectStudent(e.target.value)}
+        options={students.map((st) => ({ value: st.id, label: st.name }))}
+      />
+      {student && student.remaining !== null && student.remaining <= 0 && (
+        <p className="flex items-start gap-2 rounded-xl bg-warning-soft p-3 text-sm text-warning">
+          <AlertTriangleIcon className="mt-0.5 size-4 shrink-0" />
+          {student.name} öğrencisinin ders hakkı kalmadı. Planlamadan önce kuruculara danışın.
+        </p>
+      )}
+      {student && student.remaining !== null && student.remaining > 0 && (
+        <p className="-mt-2 text-xs text-muted-foreground">
+          Kalan ders hakkı: <b className="text-foreground">{student.remaining}</b>
+        </p>
+      )}
+      <SelectField
+        name="assignment_id"
+        label="Branş"
+        required
+        disabled={!student}
+        placeholder={student ? "Branş seçin" : "Önce öğrenci seçin"}
+        value={assignmentId}
+        onChange={(e) => setAssignmentId(e.target.value)}
+        options={(student?.options ?? []).map((o) => ({
+          value: o.id,
+          label: o.subjectName,
+        }))}
+      />
+      {selected && (
+        <p className="-mt-2 text-xs text-muted-foreground">
+          Süre: <b className="text-foreground">{context.durations[selected.lessonType]} dk</b> (
+          {LESSON_TYPE_LABELS[selected.lessonType]})
+        </p>
+      )}
+      {fixedDate ? (
+        <>
+          <input type="hidden" name="date" value={date} />
+          {timeField}
+        </>
+      ) : (
+        <div className="grid grid-cols-2 gap-4">
+          <TextField name="date" label="Tarih" type="date" required defaultValue={date} />
+          {timeField}
+        </div>
+      )}
+      <TextField
+        name="meeting_url"
+        label="Ders linki (Zoom/Meet)"
+        type="url"
+        placeholder="https://"
+        defaultValue={context.defaultMeetingUrl ?? ""}
+      />
+    </ActionForm>
   );
 }
 
