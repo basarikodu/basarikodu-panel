@@ -23,6 +23,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
+  founderDeleteLesson,
+  founderUpdateLesson,
   recordLessonResult,
   requestLessonChange,
   withdrawChangeRequest,
@@ -105,7 +107,7 @@ function LessonDetail({
             <UserIcon className="size-4" />
             {mode === "student"
               ? l.tutorName
-              : `${LESSON_TYPE_LABELS[l.lessonType]}${l.isFree ? " · hediye koçluk" : ""}`}
+              : `${mode === "founder" ? `${l.tutorName} · ` : ""}${LESSON_TYPE_LABELS[l.lessonType]}${l.isFree ? " · hediye koçluk" : ""}`}
           </span>
         </DialogDescription>
       </DialogHeader>
@@ -151,6 +153,66 @@ function LessonDetail({
               {mode === "student" ? "Derse katıl" : "Derse git"}
             </a>
           </Button>
+        )}
+
+        {mode === "founder" && l.approvalStatus === "approved" && (
+          <div className="grid gap-3 border-t pt-3">
+            <p className="text-xs font-bold tracking-[0.18em] text-muted-foreground uppercase">
+              Kurucu düzenlemesi (onaysız uygulanır)
+            </p>
+            <ActionForm
+              action={founderUpdateLesson.bind(null, l.id)}
+              submitLabel="Kaydet"
+              onSuccess={close}
+              footer={
+                <ActionButton
+                  variant="outline"
+                  action={async () => {
+                    const s = await founderDeleteLesson(l.id);
+                    if (s?.success) close();
+                    return s;
+                  }}
+                  confirmTitle="Ders silinsin mi?"
+                  confirmText="Ders kalıcı olarak silinir. Yapılmayan dersler için 'İptal' durumu önerilir."
+                  confirmLabel="Sil"
+                  destructive
+                >
+                  Sil
+                </ActionButton>
+              }
+            >
+              <div className="grid grid-cols-2 gap-3">
+                <TextField
+                  name="date"
+                  label="Tarih"
+                  type="date"
+                  required
+                  defaultValue={toDateKey(new Date(l.startsAt))}
+                />
+                <TextField
+                  name="time"
+                  label="Saat"
+                  type="time"
+                  step={900}
+                  required
+                  defaultValue={toTimeValue(new Date(l.startsAt))}
+                />
+              </div>
+              <SelectField
+                name="status"
+                label="Durum"
+                defaultValue={l.status === "postponed" ? "planned" : l.status}
+                options={[
+                  { value: "planned", label: "Planlandı" },
+                  { value: "completed", label: "Tamamlandı" },
+                  { value: "no_show", label: "Öğrenci gelmedi" },
+                  { value: "cancelled_by_student", label: "İptal (öğrenci)" },
+                  { value: "cancelled_by_tutor", label: "İptal (eğitmen)" },
+                ]}
+              />
+              <TextAreaField name="topic" label="Ders notu" rows={2} defaultValue={l.topic ?? ""} />
+            </ActionForm>
+          </div>
         )}
 
         {isTutor && (showResult || showChange || canWithdraw(state) || l.pendingChange) && (

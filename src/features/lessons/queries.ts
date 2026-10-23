@@ -291,3 +291,57 @@ export async function getTutorStudentLessons(tutorId: string, studentId: string)
     .order("starts_at", { ascending: false });
   return ((data ?? []) as unknown as LessonRow[]).map(toCalendarLesson);
 }
+
+/** Kurucu: tüm aktif eşleştirmeler (ders ekleme formu) ve filtre seçenekleri */
+export async function getFounderPlanningContext() {
+  const supabase = await createClient();
+  const [{ data: assignments }, { data: settings }, credits] = await Promise.all([
+    supabase
+      .from("tutor_students")
+      .select(
+        "id, lesson_type, subject:subjects(name), student:students(id, profile:profiles!inner(full_name, is_active)), tutor:tutors(id, default_meeting_url, profile:profiles!inner(full_name, is_active))",
+      )
+      .eq("is_active", true),
+    supabase
+      .from("app_settings")
+      .select("duration_private, duration_coaching")
+      .eq("id", 1)
+      .maybeSingle(),
+    getCreditBalances(),
+  ]);
+
+  const rows = (assignments ?? []).filter(
+    (a) => a.student?.profile.is_active && a.tutor?.profile.is_active,
+  );
+  const context: PlanningContext = {
+    assignments: rows
+      .map((a) => ({
+        id: a.id,
+        studentId: a.student!.id,
+        studentName: a.student!.profile.full_name,
+        subjectName: `${a.subject?.name ?? ""} · ${a.tutor!.profile.full_name}`,
+        lessonType: a.lesson_type,
+        remaining: credits.get(a.student!.id)?.remaining ?? null,
+      }))
+      .sort((a, b) => a.studentName.localeCompare(b.studentName, "tr")),
+    defaultMeetingUrl: null,
+    durations: {
+      ozel_ders: settings?.duration_private ?? 60,
+      kocluk: settings?.duration_coaching ?? 40,
+    },
+  };
+
+  const uniq = (list: { value: string; label: string }[]) =>
+    [...new Map(list.map((o) => [o.value, o])).values()].sort((a, b) =>
+      a.label.localeCompare(b.label, "tr"),
+    );
+  return {
+    context,
+    tutorOptions: uniq(
+      rows.map((a) => ({ value: a.tutor!.id, label: a.tutor!.profile.full_name })),
+    ),
+    studentOptions: uniq(
+      rows.map((a) => ({ value: a.student!.id, label: a.student!.profile.full_name })),
+    ),
+  };
+}

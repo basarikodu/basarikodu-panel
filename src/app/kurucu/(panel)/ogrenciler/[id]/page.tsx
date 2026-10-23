@@ -16,7 +16,10 @@ import { SubjectChip } from "@/components/shared/subject-chip";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { recordPayment } from "@/features/finance/actions";
+import { toDateKey } from "@/features/lessons/rules";
 import { deletePackage, savePackage } from "@/features/packages/actions";
+import { PaymentFields } from "@/components/founder/payment-fields";
 import {
   assignTutor,
   removeAssignment,
@@ -270,10 +273,26 @@ export default async function StudentDetailPage({ params }: PageProps<"/kurucu/o
           </CardContent>
         </Card>
 
-        {/* Ödemeler (kayıt Faz 5'te) */}
+        {/* Ödemeler */}
         <Card>
-          <CardHeader>
+          <CardHeader className="flex-row items-center justify-between">
             <CardTitle>Ödemeler</CardTitle>
+            <FormDialog
+              title="Tahsilat kaydet"
+              description={`${p.full_name} için alınan ödemeyi girin.`}
+              action={recordPayment}
+              trigger={
+                <Button size="sm" variant="outline">
+                  <PlusIcon className="size-4" /> Tahsilat
+                </Button>
+              }
+            >
+              <PaymentFields
+                studentOptions={[{ value: id, label: p.full_name }]}
+                studentId={id}
+                today={toDateKey(new Date())}
+              />
+            </FormDialog>
           </CardHeader>
           <CardContent className="grid gap-3 text-sm">
             <div className="grid grid-cols-2 gap-2">
