@@ -2,8 +2,8 @@
 
 > **v1 = sade sürüm.** Eğitmen ders planlar → kurucu onaylar → öğrenci haftalık takvimde görür; kurucular eğitmen/öğrenci, dersler ve gelir-gider/ödenecekleri takip eder. Kapsam: [docs/02-GEREKSINIMLER.md](docs/02-GEREKSINIMLER.md)
 >
-> Başlangıç: **26 Ekim 2026** · Pilot kullanım: **≈ 10 Kasım** (Faz 4 sonu) · Canlı: **≈ 18 Kasım 2026** (~3 hafta, 15 iş günü)
-> 28 Ekim öğleden sonra ve 29 Ekim resmi tatil olarak hesaba katıldı. Tahmin: 1 geliştirici + Claude Code; kurucu geri bildirimi her faz sonunda 1 gün içinde.
+> **Takvim tarihi yok — olabilecek en hızlı sürede.** Fazlar beklemeden arka arkaya yapılır; bir faz biter, commit edilir, hemen sonrakine geçilir. Pilot kullanım Faz 4 sonunda, canlı Faz 6 sonunda.
+> Kurucu demosu fazları durdurmaz: geri bildirimler bir sonraki faz sürerken uygulanır.
 
 ## Çalışma kuralı
 1. Her faz kendi branch'inde (`faz-N-kisa-ad`); sonunda "Bitti tanımı" sağlanır, buradaki kutucuklar işaretlenir.
@@ -12,18 +12,23 @@
 4. Commit: `feat(faz-N): <özet>` (Conventional Commits).
 5. v1 kapsamı dışındaki istekler aşağıdaki **v1 sonrası** listesine yazılır.
 
-## Zaman çizelgesi
+## Faz sırası
 
-| Faz | Kapsam | Süre | Tarih |
-|---|---|---|---|
-| 0 | Kurulum & tasarım temeli | 1 gün | 26 Eki |
-| 1 | Veritabanı, giriş, roller, panel iskeletleri | 2 gün | 27, 28, 30 Eki |
-| 2 | Kurucu: eğitmen & öğrenci yönetimi, atama, **aylık paket / ders hakkı** | 2 gün | 2–3 Kas |
-| 3 | Eğitmen ders planlama + kurucu onay akışı | 3,5 gün | 4–9 Kas |
-| 4 | Öğrenci / veli paneli (ders hakkı kartı dahil) | 1,5 gün | 9–10 Kas |
-| 5 | Kurucu: dersler, gelir-gider, ödenecekler, genel bakış | 2,5 gün | 11–13 Kas |
-| 6 | Test, cila, canlıya çıkış | 2 gün | 16–18 Kas |
-| **Toplam** | | **~14,5 iş günü** | |
+| Faz | Kapsam | Durum |
+|---|---|---|
+| 0 | Kurulum & tasarım temeli | ⏳ |
+| 1 | Veritabanı, giriş, roller, panel iskeletleri | ⬜ |
+| 2 | Kurucu: eğitmen & öğrenci yönetimi, atama, **aylık paket / ders hakkı** | ⬜ |
+| 3 | Eğitmen ders planlama + kurucu onay akışı | ⬜ |
+| 4 | Öğrenci / veli paneli (ders hakkı kartı dahil) → **pilot** | ⬜ |
+| 5 | Kurucu: dersler, gelir-gider, ödenecekler, genel bakış | ⬜ |
+| 6 | Test, cila, canlıya çıkış → **canlı** | ⬜ |
+
+## Sizden gerekenler (beklemeye yol açmaması için erkenden)
+- **Faz 1:** Supabase hesabı/organizasyonu (ücretsiz plan yeterli) — projeyi oluşturmam için onay
+- **Faz 0–1:** GitHub reposu ve Vercel projesi (önizleme için) — hesap onayı
+- **Faz 2:** Gerçek eğitmen ve öğrenci listesi (ad, e-posta, telefon, branş, atamalar, bu ayki paketler)
+- **Faz 6:** `basarikodu.com` DNS paneline erişim (`panel.` alt alanı ve `panel@basarikodu.com` e-posta kayıtları)
 
 ---
 
