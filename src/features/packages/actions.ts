@@ -6,8 +6,8 @@ import { dbFail, fail, formValue, ok, zodFail, type ActionState } from "@/lib/ac
 import { requireRole } from "@/lib/auth";
 import { formatMonthKey, isMonthKey, shiftMonthKey, type MonthKey } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
-import { istanbulToUtc } from "@/features/lessons/rules";
-import { packagesToCopy } from "./rules";
+import { getLessonPrices } from "@/features/settings/queries";
+import { packagesToCopy, suggestedPackagePrice } from "./rules";
 
 const packageSchema = z.object({
   month: z.string().refine(isMonthKey, "Ay seçin"),
@@ -39,19 +39,6 @@ export async function savePackage(
       { onConflict: "student_id,month" },
     );
   if (error) return dbFail(error);
-
-  // 8+ derslik pakette o ayın planlanmış koçlukları hediyedir (eğitmene 0 ₺, haktan düşmez)
-  if (parsed.data.lesson_count >= 8) {
-    const month = parsed.data.month as MonthKey;
-    await supabase
-      .from("lessons")
-      .update({ is_free: true })
-      .eq("student_id", studentId)
-      .eq("lesson_type", "kocluk")
-      .eq("status", "planned")
-      .gte("starts_at", istanbulToUtc(month).toISOString())
-      .lt("starts_at", istanbulToUtc(shiftMonthKey(month, 1)).toISOString());
-  }
 
   revalidatePath(`/kurucu/ogrenciler/${studentId}`);
   revalidatePath("/kurucu/ogrenciler");
@@ -99,9 +86,16 @@ export async function copyPackagesFromPreviousMonth(
     );
   }
 
-  const { error } = await supabase
-    .from("student_packages")
-    .insert(rows.map((r) => ({ ...r, month, created_by: me.id })));
+  // Tutar güncel ders fiyatlarından yeniden hesaplanır (Ayarlar'da fiyat değiştiyse yansır)
+  const prices = await getLessonPrices();
+  const { error } = await supabase.from("student_packages").insert(
+    rows.map((r) => ({
+      ...r,
+      price_total: suggestedPackagePrice(r.lesson_count, prices),
+      month,
+      created_by: me.id,
+    })),
+  );
   if (error) return dbFail(error);
 
   revalidatePath("/kurucu/ogrenciler", "layout");

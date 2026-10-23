@@ -41,7 +41,7 @@ Basit sayı kartları; **hafta ↔ ay** geçişli:
 - **Aylık paket / ders hakkı:** kurucu öğrenciye her ay için paket tanımlar — **4, 8, 12 ders** veya özel sayı, paket tutarı ve not.
   - "Önceki aydan devam ettir": tek tıkla tüm öğrencilerin yeni ay paketini bir önceki aya göre oluştur, gerekirse tek tek düzelt.
   - Hak yanmaz: ay içinde kullanılmayan dersler sonraki aya **devreder**.
-  - Hesap: *Toplam hak* = tüm paketlerdeki ders sayısı; *Kullanılan* = tamamlanan dersler (hediye koçluk hariç); *Kalan* = Toplam − Kullanılan.
+  - Hesap: *Toplam hak* = tüm paketlerdeki ders sayısı; *Kullanılan* = tamamlanan dersler; *Kalan* = Toplam − Kullanılan.
 - Liste ve detayda: "Ekim: 8 ders paketi · 5 tamamlandı · 1 devreden · **4 hak kaldı**", ay ay ders sayısı ve hangi derslerin alındığı (tarih, branş, eğitmen)
 - Detay: ders geçmişi, paketleri, ödemeleri
 
@@ -57,7 +57,8 @@ Basit sayı kartları; **hafta ↔ ay** geçişli:
 - Özet: toplam gelir, toplam gider, net
 
 ### K7 — Ayarlar
-- Ortak eğitmen ücreti (özel ders / ücretli koçluk), branş listesi, ders süreleri (60 / 40 dk)
+- **Öğrenci ders fiyatları:** haftada 1 ders (ders başı, varsayılan 950 ₺) ve haftada 2+ (ders başı, varsayılan 850 ₺); paket tutarı bunlardan hesaplanır
+- Ortak eğitmen ücreti (özel ders / koçluk), branş listesi, ders süreleri (60 / 40 dk)
 
 ## 3. Eğitmen paneli (v1)
 

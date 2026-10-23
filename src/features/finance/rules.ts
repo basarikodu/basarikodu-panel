@@ -58,13 +58,11 @@ type CompletedLesson = {
   tutor_id: string;
   tutor_rate_snapshot: number;
   payout_id: string | null;
-  is_free: boolean;
 };
 
 export type TutorDue = {
   tutorId: string;
   lessonCount: number;
-  freeCount: number;
   total: number;
   paidTotal: number;
   dueTotal: number;
@@ -80,7 +78,6 @@ export function tutorDues(lessons: CompletedLesson[]): TutorDue[] {
       ({
         tutorId: l.tutor_id,
         lessonCount: 0,
-        freeCount: 0,
         total: 0,
         paidTotal: 0,
         dueTotal: 0,
@@ -88,7 +85,6 @@ export function tutorDues(lessons: CompletedLesson[]): TutorDue[] {
       } as TutorDue);
     const amount = Number(l.tutor_rate_snapshot) || 0;
     d.lessonCount += 1;
-    if (l.is_free) d.freeCount += 1;
     d.total += amount;
     if (l.payout_id) d.paidTotal += amount;
     else {

@@ -72,10 +72,7 @@ export async function getStudentOverview(studentId: string, now = new Date()) {
 export type MonthSummary = {
   month: MonthKey;
   packageLessons: number | null;
-  /** Paketten düşen (hediye olmayan) tamamlanan dersler */
   completed: number;
-  /** Hediye koçluk (paketten düşmez) */
-  free: number;
   noShow: number;
   bySubject: { name: string; color: string; count: number }[];
 };
@@ -104,7 +101,6 @@ export async function getStudentHistory(studentId: string) {
         month: m,
         packageLessons: pkg.get(m) ?? null,
         completed: 0,
-        free: 0,
         noShow: 0,
         bySubject: [],
       });
@@ -117,8 +113,7 @@ export async function getStudentHistory(studentId: string) {
     const s = ensure(toMonthKey(new Date(l.startsAt)));
     if (l.status === "no_show") s.noShow += 1;
     if (l.status !== "completed") continue;
-    if (l.isFree) s.free += 1;
-    else s.completed += 1;
+    s.completed += 1;
     const subj = s.bySubject.find((b) => b.name === l.subjectName);
     if (subj) subj.count += 1;
     else s.bySubject.push({ name: l.subjectName, color: l.color, count: 1 });

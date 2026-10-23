@@ -62,7 +62,7 @@
 - [x] **Eğitmen atama:** öğrenci detayında branş bazında eğitmen ata / kaldır
 - [x] **Aylık paket:** öğrenciye ay için paket tanımla (4 / 8 / 12 / özel ders, tutar, not); "önceki aydan devam ettir" toplu oluşturma
 - [x] **Ders hakkı gösterimi:** öğrenci listesinde ve detayında bu ay paket / tamamlanan / devreden / **kalan hak**; ay ay ders sayısı
-- [x] Testler: kalan hak hesabı (yalnızca tamamlanan, hediye koçluk hariç, devir)
+- [x] Testler: kalan hak hesabı (yalnızca tamamlanan, devir)
 - [x] Ayarlar: ortak eğitmen ücreti, branşlar, ders süreleri
 **Bitti:** Kurucu eğitmen ve öğrenci ekleyip atama ve aylık paket tanımlayabiliyor; kalan hak doğru görünüyor; davet edilen kullanıcı giriş yapabiliyor.
 **Commit:** `feat(faz-2): eğitmen/öğrenci yönetimi, atama ve aylık paket`
@@ -93,10 +93,10 @@
 ## Faz 5 — Kurucu: Dersler, Gelir-Gider, Ödenecekler (2,5 gün)
 - [x] **Dersler:** tüm dersler liste + haftalık takvim; filtre (tarih, eğitmen, öğrenci, durum); kurucu doğrudan ekle/düzenle/iptal
 - [x] **Gelir:** öğrenci ödemesi kaydı (öğrenci, tutar, tarih, yöntem, not); öğrenci detayında ödemeler; paket tutarı vs. ödenen → bekleyen tahsilat
-- [x] **Ödenecekler:** hafta / ay seçimi → eğitmen başına tamamlanan ders × ortak ücret, IBAN, "Ödendi" işaretleme (hediye koçluk 0 TL)
+- [x] **Ödenecekler:** hafta / ay seçimi → eğitmen başına tamamlanan ders × ortak ücret, IBAN, "Ödendi" işaretleme
 - [x] **Gelir-Gider özeti:** hafta ↔ ay; gelir, gider, net
 - [x] **Genel Bakış:** ders sayısı (yapılan/planlanan), gelir/gider/net, aktif eğitmen/öğrenci, onay bekleyen sayısı
-- [x] Testler: hakediş hesabı (yalnızca tamamlanan dersler, hediye koçluk 0), hafta/ay sınırları
+- [x] Testler: hakediş hesabı (yalnızca tamamlanan dersler), hafta/ay sınırları
 **Bitti:** Bir haftalık gerçekçi senaryoda kurucular kime ne kadar ödeyeceklerini ve gelir-gideri doğru görüyor.
 **Commit:** `feat(faz-5): dersler, gelir-gider ve ödenecekler`
 
@@ -119,7 +119,9 @@
 - Ders sonucu (Tamamlandı / Öğrenci gelmedi) onaysız kaydedilir; kurucular düzeltebilir.
 - Öğrencinin hakkı yanmaz; yapılmayan ders ertelenir. Eğitmene yalnızca **tamamlanan** ders ödenir.
 - **Aylık paket v1'de:** kurucu her ay öğrenciye 4/8/12/özel ders paketi tanımlar; öğrenci panelde toplam/kullanılan/kalan hakkını görür. Kullanılmayan hak sonraki aya devreder.
-- Eğitmen ücreti **herkese aynı**; hediye koçluk için ekstra ödeme yok.
+- Eğitmen ücreti **herkese aynı** (Ayarlar'dan).
+- **Hediye koçluk kuralı yok** (23 Eki 2026 güncellemesi): koçluk normal ders gibi sayılır, haktan düşer ve eğitmene ödenir.
+- **Öğrenci ders fiyatları kurucu ayarıdır:** haftada 1 ders → ders başı 950 ₺, haftada 2 ve üzeri → ders başı 850 ₺ (Ayarlar'dan değiştirilebilir). Paket tutarı bu fiyatlardan önerilir, pakette elle değiştirilebilir.
 - Panel para transferi yapmaz; ödemeler manuel, panel **haftalık ve aylık** gelir-gider ve ödenecekleri gösterir.
 - Öğrenci ve veli **aynı hesap**. Davetler `panel@basarikodu.com`'dan.
 

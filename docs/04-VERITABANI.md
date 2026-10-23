@@ -90,7 +90,7 @@ Unique: (tutor_id, student_id, subject_id) aktifken.
 | rejection_reason | text null | |
 | meeting_url | text null | |
 | student_package_id | uuid null | Hakkın düştüğü paket |
-| is_free | bool default false | Hediye koçluk |
+| is_free | bool default false | Kullanılmıyor (hediye koçluk kuralı kaldırıldı); ileride ücretsiz ders için |
 | tutor_rate_snapshot | numeric(10,2) | Ders oluşturulurken kopyalanır |
 | topic | text null | İşlenen konu |
 | homework | text null | |
@@ -195,7 +195,7 @@ Haftalık/aylık gelir-gider raporu ayrı tablo değil, view/RPC: `finance_summa
 - `handle_new_user()` — auth.users insert → profiles satırı (rol, davetteki metadata'dan)
 - `custom_access_token_hook()` — JWT'ye `user_role` claim ekler
 - Ders hakkı için trigger yok: `student_credit_balance` view'ı yalnızca `completed` dersleri sayar; `no_show` / iptal / erteleme hak düşürmez. Durum düzeltmeleri otomatik doğru yansır.
-- `set_tutor_rate_snapshot()` — ders onaylandığında `app_settings`'teki ortak ücreti kopyalar; `is_free=true` (hediye koçluk) ise 0
+- `set_tutor_rate_snapshot()` — ders onaylandığında `app_settings`'teki ortak ücreti kopyalar; `is_free=true` ise 0 (şu an otomatik işaretlenmez)
 - `force_pending_for_tutor()` — eğitmenin insert ettiği derste `approval_status`'ü zorla `pending` yapar (istemciye güvenilmez)
 - `approve_lesson_request(request_id | lesson_ids[])` / `reject_lesson_request(..., reason)` — yalnızca founder; talebi atomik uygular (erteleme → saat değişir, iptal → status değişir), çakışma varsa hata döner
 - `compute_payout(tutor_id, period_start, period_end)` — RPC; dönemdeki `completed` derslerin toplamı

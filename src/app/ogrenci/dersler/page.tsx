@@ -22,9 +22,9 @@ export default async function StudentLessonsPage() {
     getCreditBalances(),
   ]);
   const credit = credits.get(profile.id);
-  const totalCompleted = history.months.reduce((s, m) => s + m.completed + m.free, 0);
+  const totalCompleted = history.months.reduce((s, m) => s + m.completed, 0);
   const current = history.months.find((m) => m.month === toMonthKey());
-  const thisMonth = (current?.completed ?? 0) + (current?.free ?? 0);
+  const thisMonth = current?.completed ?? 0;
 
   return (
     <>
@@ -94,11 +94,6 @@ export default async function StudentLessonsPage() {
                               <span className="text-xs text-muted-foreground">×{s.count}</span>
                             </span>
                           ))}
-                          {m.free > 0 && (
-                            <span className="text-xs text-success">
-                              +{m.free} hediye koçluk (haktan düşmez)
-                            </span>
-                          )}
                           {m.noShow > 0 && (
                             <span className="text-xs text-warning">
                               {m.noShow} ders katılınmadı

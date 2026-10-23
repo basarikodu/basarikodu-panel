@@ -56,7 +56,7 @@ export default async function StudentsPage({ searchParams }: PageProps<"/kurucu/
           <>
             <FormDialog
               title="Aylık paketleri oluştur"
-              description="Seçtiğiniz ay için, önceki aydaki paketler paketi olmayan aktif öğrencilere aynen kopyalanır. Farklı olanları sonra öğrenci sayfasından düzenleyebilirsiniz."
+              description="Seçtiğiniz ay için, önceki aydaki paketlerin ders sayısı paketi olmayan aktif öğrencilere kopyalanır; tutar güncel ders fiyatlarından hesaplanır. Farklı olanları sonra öğrenci sayfasından düzenleyebilirsiniz."
               action={copyPackagesFromPreviousMonth}
               submitLabel="Paketleri oluştur"
               trigger={

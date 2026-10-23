@@ -37,17 +37,16 @@ describe("dönemler", () => {
 
 describe("tutorDues", () => {
   const lessons = [
-    { tutor_id: "a", tutor_rate_snapshot: 400, payout_id: "p1", is_free: false },
-    { tutor_id: "a", tutor_rate_snapshot: 400, payout_id: null, is_free: false },
-    { tutor_id: "a", tutor_rate_snapshot: 0, payout_id: null, is_free: true },
-    { tutor_id: "b", tutor_rate_snapshot: 250, payout_id: null, is_free: false },
+    { tutor_id: "a", tutor_rate_snapshot: 400, payout_id: "p1" },
+    { tutor_id: "a", tutor_rate_snapshot: 400, payout_id: null },
+    { tutor_id: "a", tutor_rate_snapshot: 0, payout_id: null },
+    { tutor_id: "b", tutor_rate_snapshot: 250, payout_id: null },
   ];
-  it("ödenen ve bekleyeni ders bazında ayırır; hediye koçluk 0 TL", () => {
+  it("ödenen ve bekleyeni ders bazında ayırır; tutar ders anındaki ücretten", () => {
     const a = tutorDues(lessons).find((d) => d.tutorId === "a")!;
     expect(a).toEqual({
       tutorId: "a",
       lessonCount: 3,
-      freeCount: 1,
       total: 800,
       paidTotal: 400,
       dueTotal: 400,

@@ -13,6 +13,28 @@ const settingsSchema = z.object({
   duration_coaching: z.coerce.number().int().min(15).max(240),
 });
 
+const priceSchema = z.object({
+  lesson_price_single: z.coerce.number().min(0, "Fiyat negatif olamaz").max(100_000),
+  lesson_price_multi: z.coerce.number().min(0, "Fiyat negatif olamaz").max(100_000),
+});
+
+/** Öğrenci ders fiyatları (paket tutarı önerisi bunlardan hesaplanır) */
+export async function updateLessonPrices(_prev: ActionState, fd: FormData): Promise<ActionState> {
+  const me = await requireRole("founder");
+  const parsed = priceSchema.safeParse(Object.fromEntries(fd));
+  if (!parsed.success) return zodFail(parsed.error);
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("app_settings")
+    .update({ ...parsed.data, updated_by: me.id })
+    .eq("id", 1);
+  if (error) return dbFail(error);
+
+  revalidatePath("/kurucu", "layout");
+  return ok("Ders fiyatları kaydedildi. Yeni paketlerde bu fiyatlar önerilecek.");
+}
+
 export async function updateSettings(_prev: ActionState, fd: FormData): Promise<ActionState> {
   const me = await requireRole("founder");
   const parsed = settingsSchema.safeParse(Object.fromEntries(fd));

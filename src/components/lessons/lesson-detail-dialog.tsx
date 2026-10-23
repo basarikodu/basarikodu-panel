@@ -107,7 +107,7 @@ function LessonDetail({
             <UserIcon className="size-4" />
             {mode === "student"
               ? l.tutorName
-              : `${mode === "founder" ? `${l.tutorName} · ` : ""}${LESSON_TYPE_LABELS[l.lessonType]}${l.isFree ? " · hediye koçluk" : ""}`}
+              : `${mode === "founder" ? `${l.tutorName} · ` : ""}${LESSON_TYPE_LABELS[l.lessonType]}`}
           </span>
         </DialogDescription>
       </DialogHeader>
