@@ -8,7 +8,13 @@ import { SubjectChip } from "@/components/shared/subject-chip";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { createSubject, updateSettings, updateSubject } from "@/features/settings/actions";
+import {
+  createSubject,
+  updateLessonPrices,
+  updateSettings,
+  updateSubject,
+} from "@/features/settings/actions";
+import { suggestedPackagePrice } from "@/features/packages/rules";
 import { getSubjects } from "@/features/users/queries";
 import { formatDateTime } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
@@ -26,12 +32,87 @@ export default async function SettingsPage() {
     <>
       <PageHeader title="Ayarlar" />
       <div className="grid gap-4 lg:grid-cols-2">
+        <Card className="lg:col-span-2">
+          <CardHeader className="flex-row items-start justify-between">
+            <div>
+              <CardTitle>Öğrenci ders fiyatları</CardTitle>
+              <CardDescription>
+                Paket tutarı bu fiyatlardan otomatik hesaplanır; her pakette ayrıca
+                değiştirilebilir.
+              </CardDescription>
+            </div>
+            {settings && (
+              <FormDialog
+                title="Ders fiyatlarını düzenle"
+                description="Yeni fiyatlar bundan sonra oluşturulan paketlerde önerilir; mevcut paketler değişmez."
+                action={updateLessonPrices}
+                trigger={
+                  <Button size="sm" variant="outline">
+                    <PencilIcon className="size-4" /> Düzenle
+                  </Button>
+                }
+              >
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <TextField
+                    name="lesson_price_single"
+                    label="Haftada 1 ders · ders başı (₺)"
+                    type="number"
+                    min={0}
+                    step="0.01"
+                    required
+                    defaultValue={settings.lesson_price_single}
+                  />
+                  <TextField
+                    name="lesson_price_multi"
+                    label="Haftada 2 ve üzeri · ders başı (₺)"
+                    type="number"
+                    min={0}
+                    step="0.01"
+                    required
+                    defaultValue={settings.lesson_price_multi}
+                  />
+                </div>
+              </FormDialog>
+            )}
+          </CardHeader>
+          {settings && (
+            <CardContent className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="rounded-xl bg-muted p-4">
+                <p className="text-sm text-muted-foreground">Haftada 1 ders · ders başı</p>
+                <MoneyText
+                  value={settings.lesson_price_single}
+                  className="font-heading text-2xl font-bold"
+                />
+              </div>
+              <div className="rounded-xl bg-muted p-4">
+                <p className="text-sm text-muted-foreground">Haftada 2+ ders · ders başı</p>
+                <MoneyText
+                  value={settings.lesson_price_multi}
+                  className="font-heading text-2xl font-bold"
+                />
+              </div>
+              {[8, 12].map((n) => (
+                <div key={n} className="rounded-xl border p-4">
+                  <p className="text-sm text-muted-foreground">Aylık {n} ders paketi</p>
+                  <MoneyText
+                    value={suggestedPackagePrice(n, {
+                      single: Number(settings.lesson_price_single),
+                      multi: Number(settings.lesson_price_multi),
+                    })}
+                    className="font-heading text-2xl font-bold"
+                  />
+                </div>
+              ))}
+            </CardContent>
+          )}
+        </Card>
+
         <Card>
           <CardHeader className="flex-row items-start justify-between">
             <div>
               <CardTitle>Eğitmen ders ücreti</CardTitle>
               <CardDescription>
-                Tüm eğitmenler için aynıdır. Hediye koçluk için ödeme yapılmaz.
+                Tüm eğitmenler için aynıdır; tamamlanan her ders için ödenir.
               </CardDescription>
             </div>
             {settings && (

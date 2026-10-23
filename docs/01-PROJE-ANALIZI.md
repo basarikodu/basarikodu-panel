@@ -34,6 +34,8 @@
 | Haftada 3 Ders | 800 TL | 12 | 9.600 TL | **Koçluk hediye** |
 | Sadece Koçluk | ön görüşmede belirleniyor | — | — | Formda ayrı seçenek |
 
+> **Panel kararı (23 Eki 2026):** Panelde fiyatlar kurucu ayarıdır — haftada 1 ders 950 ₺/ders, haftada 2+ 850 ₺/ders. Hediye koçluk kuralı panelde uygulanmaz.
+
 İş kuralları (SSS'den):
 - Ödeme **aylık veya ders başı**; yöntem ön görüşmede netleşiyor → panelde **manuel ödeme kaydı** yeterli (ödeme altyapısı entegrasyonu yok).
 - Paket dersleri **farklı branşlardan** alınabilir (12 dersin bir kısmı Matematik, bir kısmı Fizik olabilir).

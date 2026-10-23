@@ -107,7 +107,6 @@ function Header({ lesson }: { lesson: CalendarLesson }) {
         <p className="truncate text-lg font-bold">{lesson.studentName}</p>
         <p className="text-sm text-muted-foreground">
           {lesson.tutorName} · {LESSON_TYPE_LABELS[lesson.lessonType]}
-          {lesson.isFree && " · hediye koçluk"}
         </p>
       </div>
       <SubjectChip name={lesson.subjectName} color={lesson.color} />

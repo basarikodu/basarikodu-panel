@@ -54,3 +54,15 @@ export function packagesToCopy<T extends PackageLike>(
       note: p.note,
     }));
 }
+
+export type LessonPrices = { single: number; multi: number };
+
+/**
+ * Önerilen paket tutarı: aylık 8+ ders (haftada 2 ve üzeri) indirimli ders fiyatından,
+ * daha azı tek ders fiyatından hesaplanır. Kurucu formda tutarı değiştirebilir.
+ */
+export function suggestedPackagePrice(lessonCount: number, prices: LessonPrices, threshold = 8) {
+  if (!Number.isFinite(lessonCount) || lessonCount <= 0) return 0;
+  const unit = lessonCount >= threshold ? prices.multi : prices.single;
+  return Math.round(lessonCount * unit * 100) / 100;
+}

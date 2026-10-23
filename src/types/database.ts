@@ -14,6 +14,8 @@ export type Database = {
           duration_coaching: number;
           duration_private: number;
           id: number;
+          lesson_price_multi: number;
+          lesson_price_single: number;
           tutor_rate_coaching: number;
           tutor_rate_private: number;
           updated_at: string;
@@ -23,6 +25,8 @@ export type Database = {
           duration_coaching?: number;
           duration_private?: number;
           id?: number;
+          lesson_price_multi?: number;
+          lesson_price_single?: number;
           tutor_rate_coaching?: number;
           tutor_rate_private?: number;
           updated_at?: string;
@@ -32,6 +36,8 @@ export type Database = {
           duration_coaching?: number;
           duration_private?: number;
           id?: number;
+          lesson_price_multi?: number;
+          lesson_price_single?: number;
           tutor_rate_coaching?: number;
           tutor_rate_private?: number;
           updated_at?: string;

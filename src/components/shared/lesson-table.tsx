@@ -70,7 +70,6 @@ export function LessonTable({
               {l.subject && <SubjectChip name={l.subject.name} color={l.subject.color} />}
               <p className="mt-1 text-xs text-muted-foreground">
                 {LESSON_TYPE_LABELS[l.lesson_type]}
-                {l.is_free && " · hediye"}
               </p>
             </TableCell>
             {personLabel && <TableCell className="hidden sm:table-cell">{l.person}</TableCell>}

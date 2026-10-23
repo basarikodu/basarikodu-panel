@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { creditTone, monthProgress, packagesToCopy, type CreditRow } from "./rules";
+import {
+  creditTone,
+  monthProgress,
+  packagesToCopy,
+  suggestedPackagePrice,
+  type CreditRow,
+} from "./rules";
 
 const row = (r: Partial<CreditRow>): CreditRow => ({
   total_credits: 8,
@@ -54,5 +60,22 @@ describe("packagesToCopy", () => {
     expect(out).toEqual([
       { student_id: "a", lesson_count: 8, price_total: 6800, note: "Haftada 2" },
     ]);
+  });
+});
+
+describe("suggestedPackagePrice", () => {
+  const prices = { single: 950, multi: 850 };
+  it("haftada 1 ders (4 ders) tek ders fiyatından", () => {
+    expect(suggestedPackagePrice(4, prices)).toBe(3800);
+  });
+  it("haftada 2 ve üzeri (8+ ders) indirimli fiyattan", () => {
+    expect(suggestedPackagePrice(8, prices)).toBe(6800);
+    expect(suggestedPackagePrice(12, prices)).toBe(10200);
+  });
+  it("kurucu fiyatı değiştirince öneri değişir", () => {
+    expect(suggestedPackagePrice(8, { single: 1000, multi: 900 })).toBe(7200);
+  });
+  it("geçersiz sayı 0", () => {
+    expect(suggestedPackagePrice(0, prices)).toBe(0);
   });
 });

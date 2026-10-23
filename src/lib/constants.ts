@@ -48,12 +48,15 @@ export const STUDENT_GOAL_LABELS = {
 } as const;
 export type StudentGoal = keyof typeof STUDENT_GOAL_LABELS;
 
-/** Aylık paket seçenekleri ve sitedeki fiyatlara göre önerilen tutar (kurucu değiştirebilir) */
+/** Aylık paket seçenekleri (tutar Ayarlar'daki ders fiyatlarından hesaplanır) */
 export const PACKAGE_PRESETS = [
-  { lessons: 4, label: "Haftada 1 · 4 ders", price: 3800 },
-  { lessons: 8, label: "Haftada 2 · 8 ders", price: 6800 },
-  { lessons: 12, label: "Haftada 3 · 12 ders", price: 9600 },
+  { lessons: 4, label: "Haftada 1 · 4 ders" },
+  { lessons: 8, label: "Haftada 2 · 8 ders" },
+  { lessons: 12, label: "Haftada 3 · 12 ders" },
 ] as const;
+
+/** Aylık 8 ve üzeri ders (haftada 2+) indirimli ders fiyatından hesaplanır */
+export const MULTI_LESSON_THRESHOLD = 8;
 
 export const PAYMENT_METHOD_LABELS = {
   havale: "Havale / EFT",

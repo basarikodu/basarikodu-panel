@@ -2,26 +2,37 @@
 
 import { useState } from "react";
 import { SelectField, TextField } from "@/components/shared/form-fields";
-import { PACKAGE_PRESETS } from "@/lib/constants";
+import { suggestedPackagePrice, type LessonPrices } from "@/features/packages/rules";
+import { MULTI_LESSON_THRESHOLD, PACKAGE_PRESETS } from "@/lib/constants";
+import { formatMoney } from "@/lib/format";
 
 type Option = { value: string; label: string };
 
-/** Ay + paket seçimi; hazır paket seçilince önerilen tutar doldurulur. */
+/** Ay + paket seçimi; tutar Ayarlar'daki ders fiyatlarından otomatik önerilir. */
 export function PackageFields({
   monthOptions,
+  prices,
   defaults,
 }: {
   monthOptions: Option[];
+  prices: LessonPrices;
   defaults?: { month?: string; lesson_count?: number; price_total?: number; note?: string | null };
 }) {
-  const initialPreset =
-    defaults?.lesson_count === undefined
-      ? "8"
-      : PACKAGE_PRESETS.some((p) => p.lessons === defaults.lesson_count)
-        ? String(defaults.lesson_count)
-        : "custom";
-  const [preset, setPreset] = useState(initialPreset);
-  const [price, setPrice] = useState(String(defaults?.price_total ?? 6800));
+  const initialCount = defaults?.lesson_count ?? 8;
+  const [preset, setPreset] = useState(
+    PACKAGE_PRESETS.some((p) => p.lessons === initialCount) ? String(initialCount) : "custom",
+  );
+  const [count, setCount] = useState(String(initialCount));
+  const [price, setPrice] = useState(
+    String(defaults?.price_total ?? suggestedPackagePrice(initialCount, prices)),
+  );
+
+  const applyCount = (value: string) => {
+    setCount(value);
+    setPrice(String(suggestedPackagePrice(Number(value), prices, MULTI_LESSON_THRESHOLD)));
+  };
+  const n = Number(count);
+  const unit = n >= MULTI_LESSON_THRESHOLD ? prices.multi : prices.single;
 
   return (
     <div className="grid gap-4 sm:grid-cols-2">
@@ -38,8 +49,7 @@ export function PackageFields({
         value={preset}
         onChange={(e) => {
           setPreset(e.target.value);
-          const p = PACKAGE_PRESETS.find((x) => String(x.lessons) === e.target.value);
-          if (p) setPrice(String(p.price));
+          if (e.target.value !== "custom") applyCount(e.target.value);
         }}
         options={[
           ...PACKAGE_PRESETS.map((p) => ({ value: String(p.lessons), label: p.label })),
@@ -54,7 +64,8 @@ export function PackageFields({
           min={1}
           max={60}
           required
-          defaultValue={defaults?.lesson_count ?? ""}
+          value={count}
+          onChange={(e) => applyCount(e.target.value)}
         />
       )}
       <TextField
@@ -65,7 +76,11 @@ export function PackageFields({
         step="0.01"
         value={price}
         onChange={(e) => setPrice(e.target.value)}
-        hint="Öğrenciden alınacak toplam; gelir takibinde kullanılır"
+        hint={
+          n > 0
+            ? `${n} ders × ${formatMoney(unit)} (${n >= MULTI_LESSON_THRESHOLD ? "haftada 2+ fiyatı" : "haftada 1 fiyatı"}) — değiştirebilirsiniz`
+            : undefined
+        }
       />
       <TextField
         name="note"

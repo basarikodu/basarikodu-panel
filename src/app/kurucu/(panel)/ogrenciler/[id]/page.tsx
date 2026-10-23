@@ -27,6 +27,7 @@ import {
   setAccountActive,
   updateStudent,
 } from "@/features/users/actions";
+import { getLessonPrices } from "@/features/settings/queries";
 import { getStudentDetail, getSubjects, getTutorOptions } from "@/features/users/queries";
 import { LESSON_TYPE_LABELS, PAYMENT_METHOD_LABELS, STUDENT_GOAL_LABELS } from "@/lib/constants";
 import { formatDate, formatMonthKey, shiftMonthKey, toMonthKey, type MonthKey } from "@/lib/format";
@@ -36,10 +37,11 @@ export const metadata: Metadata = { title: "Öğrenci" };
 export default async function StudentDetailPage({ params }: PageProps<"/kurucu/ogrenciler/[id]">) {
   const { id } = await params;
   const month = toMonthKey();
-  const [detail, subjects, tutors] = await Promise.all([
+  const [detail, subjects, tutors, prices] = await Promise.all([
     getStudentDetail(id, month),
     getSubjects(),
     getTutorOptions(),
+    getLessonPrices(),
   ]);
   if (!detail) notFound();
   const { student, notes, assignments, packages, lessons, payments, credit } = detail;
@@ -205,7 +207,7 @@ export default async function StudentDetailPage({ params }: PageProps<"/kurucu/o
                 </Button>
               }
             >
-              <PackageFields monthOptions={monthOptions} defaults={{ month }} />
+              <PackageFields monthOptions={monthOptions} prices={prices} defaults={{ month }} />
             </FormDialog>
           </CardHeader>
           <CardContent>
@@ -249,6 +251,7 @@ export default async function StudentDetailPage({ params }: PageProps<"/kurucu/o
                             monthOptions={[
                               { value: pk.month, label: formatMonthKey(pk.month as MonthKey) },
                             ]}
+                            prices={prices}
                             defaults={pk}
                           />
                         </FormDialog>

@@ -177,9 +177,7 @@ export default async function FinancePage({ searchParams }: PageProps<"/kurucu/f
 
       {tab === "odenecekler" && (
         <section>
-          <SectionLabel>
-            {periodLabel(period)} · tamamlanan derslere göre (hediye koçluk 0 ₺)
-          </SectionLabel>
+          <SectionLabel>{periodLabel(period)} · tamamlanan derslere göre</SectionLabel>
           {payables.length === 0 ? (
             <EmptyState icon={WalletIcon} title="Bu dönemde tamamlanan ders yok" />
           ) : (
@@ -196,9 +194,7 @@ export default async function FinancePage({ searchParams }: PageProps<"/kurucu/f
                           </Badge>
                         </p>
                         <p className="text-sm text-muted-foreground">
-                          {p.lessonCount} ders
-                          {p.freeCount > 0 && ` (${p.freeCount} hediye koçluk)`} · Toplam{" "}
-                          <MoneyText value={p.total} />
+                          {p.lessonCount} ders · Toplam <MoneyText value={p.total} />
                         </p>
                         <p className="mt-1 font-mono text-xs text-muted-foreground select-all">
                           {p.iban ?? "IBAN girilmemiş"}
