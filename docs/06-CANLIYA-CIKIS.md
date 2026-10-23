@@ -39,8 +39,8 @@ Hesaplar geçici şifreyle açıldığı için e-posta yalnızca **"Şifremi unu
 5. Authentication → **Email Templates → Reset Password**: konu "BaşarıKodu Panel – Şifre yenileme"; metni Türkçe yazın, bağlantı olarak `{{ .ConfirmationURL }}` kalsın.
 
 ## 5. Gerçek veriye geçiş
-1. **Kurucu hesapları:** 3 kurucunun ad soyad ve e-postası → hesapları geçici şifreyle açılır (kurucu hesabını panelden açma özelliği bilinçli olarak yok; teknik ekip açar).
-2. **Demo verilerin silinmesi:** `*.demo@basarikodu.com` hesapları ve onlara bağlı dersler, paketler, ödemeler silinir (geri alınamaz; onay sonrası yapılır).
+1. **Kurucu hesapları:** `scripts/kurucular.example.json` → `scripts/kurucular.local.json` olarak doldurulur, `node scripts/kurucu-hesaplari.mjs` çalıştırılır. Geçici şifreler git'e girmeyen `scripts/kurucular-sifreler.local.md` dosyasına yazılır (kurucu hesabını panelden açma özelliği bilinçli olarak yok).
+2. **Demo verilerin silinmesi:** `supabase/scripts/demo-temizle.sql` — yalnızca `*.demo@basarikodu.com` hesapları ve bağlı kayıtlar silinir; branşlar ve ayarlar korunur, tek işlemdir (hata olursa hiçbir şey silinmez). Geri alınamaz; kurucu hesapları açıldıktan sonra çalıştırılır.
 3. **Ayarlar:** gerçek eğitmen ücretleri (özel ders / koçluk) ve öğrenci ders fiyatları (950 / 850 ₺) kontrol edilir. *Demo değerleri: eğitmen 400 / 250 ₺.*
 4. **Eğitmenler** (Kurucu → Eğitmenler → Eğitmen ekle): ad, e-posta, branşlar, IBAN, ödeme sıklığı. Geçici şifreyi WhatsApp'tan iletin.
 5. **Öğrenciler** (Kurucu → Öğrenciler → Öğrenci ekle) → **eğitmen ata** → **bu ayın paketi**.

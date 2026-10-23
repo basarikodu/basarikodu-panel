@@ -49,3 +49,4 @@ test-results/
 
 # yerel notlar
 *.local.md
+*.local.json
