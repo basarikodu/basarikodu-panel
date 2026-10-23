@@ -19,6 +19,7 @@ export type CalendarLesson = {
   color: string;
   studentId: string;
   studentName: string;
+  tutorId: string;
   tutorName: string;
   pendingChange: {
     id: string;

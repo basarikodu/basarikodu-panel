@@ -20,8 +20,8 @@
 | 1 | Veritabanı, giriş, roller, panel iskeletleri | ✅ |
 | 2 | Kurucu: eğitmen & öğrenci yönetimi, atama, **aylık paket / ders hakkı** | ✅ |
 | 3 | Eğitmen ders planlama + kurucu onay akışı | ✅ |
-| 4 | Öğrenci / veli paneli (ders hakkı kartı dahil) → **pilot** | ⏳ |
-| 5 | Kurucu: dersler, gelir-gider, ödenecekler, genel bakış | ⬜ |
+| 4 | Öğrenci / veli paneli (ders hakkı kartı dahil) → **pilot** | ✅ |
+| 5 | Kurucu: dersler, gelir-gider, ödenecekler, genel bakış | ⏳ |
 | 6 | Test, cila, canlıya çıkış → **canlı** | ⬜ |
 
 ## Sizden gerekenler (beklemeye yol açmaması için erkenden)
@@ -81,11 +81,11 @@
 **Commit:** `feat(faz-3): ders planlama ve kurucu onay akışı`
 
 ## Faz 4 — Öğrenci / Veli Paneli (1,5 gün)
-- [ ] **Ders hakkı kartı:** "Kasım paketi: 8 ders · 5 tamamlandı · Kalan hakkın: 4" + ilerleme çubuğu, devreden hak
-- [ ] Ana ekran: sıradaki ders kartı (**Derse Katıl**) + haftalık takvim (yalnızca onaylı dersler)
-- [ ] Ders geçmişi: tarih, eğitmen, branş, durum, eğitmen notu; ay ay özet (paket, alınan ders, hangi dersler)
-- [ ] Profil: bilgiler, şifre değiştir, WhatsApp destek butonu
-- [ ] Mobil görünüm kontrolü
+- [x] **Ders hakkı kartı:** "Kasım paketi: 8 ders · 5 tamamlandı · Kalan hakkın: 4" + ilerleme çubuğu, devreden hak
+- [x] Ana ekran: sıradaki ders kartı (**Derse Katıl**) + haftalık takvim (yalnızca onaylı dersler)
+- [x] Ders geçmişi: tarih, eğitmen, branş, durum, eğitmen notu; ay ay özet (paket, alınan ders, hangi dersler)
+- [x] Profil: bilgiler, şifre değiştir, WhatsApp destek butonu
+- [x] Mobil görünüm kontrolü
 **Bitti:** Demo öğrenci telefondan girip haftalık derslerini ve geçmişini görüyor.
 **Commit:** `feat(faz-4): öğrenci ve veli paneli`
 > 🎯 **Pilot:** Bu noktada 2–3 eğitmen ve öğrencileriyle gerçek kullanım başlatılabilir.
