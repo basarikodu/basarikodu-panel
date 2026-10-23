@@ -12,8 +12,14 @@ export type FormState = ActionState;
 const loginSchema = z.object({
   email: z.email("Geçerli bir e-posta adresi girin"),
   password: z.string().min(1, "Şifrenizi girin"),
-  gate: z.enum(["general", "founder"]),
+  gate: z.enum(["student", "tutor", "founder"]),
 });
+
+const WRONG_GATE = {
+  student: "Bu giriş öğrenci ve veliler içindir. Eğitmenseniz Eğitmen Girişi'ni kullanın.",
+  tutor: "Bu giriş eğitmenler içindir. Öğrenci veya veliyseniz Öğrenci / Veli Girişi'ni kullanın.",
+  founder: "Bu giriş yalnızca kurucular içindir.",
+} as const;
 
 export async function signIn(_prev: FormState, formData: FormData): Promise<FormState> {
   const parsed = loginSchema.safeParse(Object.fromEntries(formData));
@@ -34,10 +40,10 @@ export async function signIn(_prev: FormState, formData: FormData): Promise<Form
     await supabase.auth.signOut();
     return { error: "Hesabınız aktif değil. Lütfen BaşarıKodu ile iletişime geçin." };
   }
-  // Kurucu kapısı yalnızca kuruculara açık
-  if (gate === "founder" && profile.role !== "founder") {
+  // Her giriş kapısı yalnızca kendi rolüne açık
+  if (profile.role !== gate) {
     await supabase.auth.signOut();
-    return { error: "Bu giriş yalnızca kurucular içindir. Eğitmen/Öğrenci girişini kullanın." };
+    return { error: WRONG_GATE[gate] };
   }
 
   redirect(ROLE_HOME[profile.role]);

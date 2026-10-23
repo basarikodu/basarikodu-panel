@@ -13,6 +13,13 @@ export type CurrentProfile = {
   email: string | null;
 };
 
+/** Her rolün kendi giriş sayfası (kurucu girişi ana sayfada yer almaz) */
+export const LOGIN_PATH: Record<UserRole, string> = {
+  founder: "/kurucu/giris",
+  tutor: "/giris/egitmen",
+  student: "/giris/ogrenci",
+};
+
 export const ROLE_HOME: Record<UserRole, string> = {
   founder: "/kurucu",
   tutor: "/egitmen",
@@ -39,7 +46,7 @@ export const getCurrentProfile = cache(async (): Promise<CurrentProfile | null> 
 /** Sayfayı yalnızca verilen role açar; değilse doğru yere yönlendirir. */
 export async function requireRole(role: UserRole): Promise<CurrentProfile> {
   const profile = await getCurrentProfile();
-  if (!profile) redirect(role === "founder" ? "/kurucu/giris" : "/giris");
+  if (!profile) redirect(LOGIN_PATH[role]);
   if (profile.role !== role) redirect(ROLE_HOME[profile.role]);
   return profile;
 }
