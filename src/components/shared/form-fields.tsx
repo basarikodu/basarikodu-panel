@@ -67,7 +67,7 @@ export function SelectField({
       <select
         id={name}
         name={name}
-        className="h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+        className="field-select h-11 w-full appearance-none rounded-[12px] border border-input bg-card pr-10 pl-3.5 text-base shadow-xs transition-[color,box-shadow,border-color] outline-none hover:border-primary/30 focus-visible:border-primary focus-visible:ring-4 focus-visible:ring-primary/10 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
         {...select}
       >
         {placeholder && <option value="">{placeholder}</option>}

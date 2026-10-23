@@ -2,6 +2,9 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+/* v1 yalnız açık tema: dark: stilleri yalnız .dark sınıfıyla (sistem koyu temasında devreye girmez) */
+@custom-variant dark (&:is(.dark *));
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -49,6 +52,8 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --shadow-card: 0 1px 2px rgb(13 27 62 / 0.04), 0 10px 30px -18px rgb(13 27 62 / 0.18);
+  --shadow-card-hover: 0 2px 4px rgb(13 27 62 / 0.05), 0 18px 40px -20px rgb(13 27 62 / 0.28);
 }
 
 :root {
@@ -99,7 +104,12 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    /* Markadan hafif ışık: sağ üstte lacivert, sol üstte yeşil */
+    background-image:
+      radial-gradient(1100px 520px at 100% -8%, rgb(11 52 120 / 0.07), transparent 62%),
+      radial-gradient(760px 420px at -6% -10%, rgb(46 130 32 / 0.05), transparent 60%);
+    background-attachment: fixed;
   }
   button:not(:disabled), [role="button"]:not(:disabled) {
     cursor: pointer;
@@ -119,5 +129,13 @@
   }
   h1, h2, h3, h4 {
     @apply font-heading tracking-tight;
+  }
+}
+@layer components {
+  /* Yerel <select> için marka uyumlu ok simgesi */
+  .field-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%235b6785' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' viewBox='0 0 24 24'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-position: right 0.9rem center;
+    background-repeat: no-repeat;
   }
 }
