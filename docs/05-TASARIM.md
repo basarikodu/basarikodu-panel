@@ -1,5 +1,12 @@
 # 05 · Tasarım Sistemi ve Ekranlar
 
+## 0. Güncel görsel dil (23 Eki 2026)
+- **Logo:** `public/logo.png` (dairesel, şeffaf zemin); favicon `src/app/icon.png`.
+- **Renkler logodan alındı:** lacivert `#012E6A` → arayüz birincil `#0B3478`, yeşil `#2E8220`, beyaz; zemin soğuk beyaz `#F3F6FB`.
+- **Yerleşim (kurucunun paylaştığı referans ekrana göre):** yüzen, köşeleri 28px yuvarlatılmış koyu lacivert yan menü (logo, panel kartı, menü, altta kullanıcı kartı); büyük "Merhaba, Ad" başlığı + uzun tarih; koyu lacivert degrade istatistik bandı (cam efektli kutular); BÜYÜK HARF aralıklı bölüm etiketleri; beyaz, geniş yuvarlatılmış kartlar.
+- Bileşenler: `AppShell`, `HeroStats`, `SectionLabel`, `UserAvatar`, `Logo`.
+- Aşağıdaki tablo ilk taslaktır; güncel değerler `src/app/globals.css` içindedir.
+
 ## 1. İlke
 Ana site ile **aynı markayı** taşıyan, sade ve "iş aleti" hissi veren bir panel: krem zemin, lacivert yapı, yeşil başarı vurgusu. Süs değil, okunabilirlik ve hız. Mobilde öğrenci/eğitmen tek elle kullanabilmeli.
 
