@@ -86,8 +86,8 @@ export default async function TutorHomePage({ searchParams }: PageProps<"/egitme
         <TutorCalendar
           weekStart={weekStart}
           today={today}
+          currentWeek={currentWeek}
           lessons={lessons}
-          context={context}
           nav={<WeekNav basePath="/egitmen" weekStart={weekStart} currentWeek={currentWeek} />}
         />
       </div>

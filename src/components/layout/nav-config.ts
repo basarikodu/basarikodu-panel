@@ -1,6 +1,7 @@
 import {
   BookOpenIcon,
   CalendarDaysIcon,
+  CalendarPlusIcon,
   CircleUserIcon,
   GraduationCapIcon,
   HourglassIcon,
@@ -39,6 +40,7 @@ export const NAV: Record<UserRole, NavItem[]> = {
   ],
   tutor: [
     { href: "/egitmen", label: "Takvim", icon: CalendarDaysIcon, mobile: true },
+    { href: "/egitmen/ders-ekle", label: "Ders Ekle", icon: CalendarPlusIcon, mobile: true },
     { href: "/egitmen/ogrencilerim", label: "Öğrencilerim", icon: GraduationCapIcon, mobile: true },
     { href: "/egitmen/profil", label: "Profil", icon: CircleUserIcon, mobile: true },
   ],
