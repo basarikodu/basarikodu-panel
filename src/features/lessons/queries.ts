@@ -6,11 +6,12 @@ import { addDays, istanbulToUtc, type DateKey } from "./rules";
 import type { CalendarLesson } from "./types";
 
 const LESSON_FIELDS =
-  "id, series_id, starts_at, ends_at, status, approval_status, rejection_reason, lesson_type, topic, meeting_url, is_free, subject:subjects(name, color), student:students(id, profile:profiles!inner(full_name)), tutor:tutors(id, profile:profiles!inner(full_name)), lesson_change_requests(id, request_type, new_starts_at, new_ends_at, cancel_status, reason, status, review_note, created_at)";
+  "id, series_id, tutor_id, starts_at, ends_at, status, approval_status, rejection_reason, lesson_type, topic, meeting_url, is_free, subject:subjects(name, color), student:students(id, profile:profiles!inner(full_name)), tutor:tutors(id, profile:profiles!inner(full_name)), lesson_change_requests(id, request_type, new_starts_at, new_ends_at, cancel_status, reason, status, review_note, created_at)";
 
-type LessonRow = {
+export type LessonRow = {
   id: string;
   series_id: string | null;
+  tutor_id: string;
   starts_at: string;
   ends_at: string;
   status: CalendarLesson["status"];
@@ -59,6 +60,7 @@ export function toCalendarLesson(l: LessonRow): CalendarLesson {
     color: l.subject?.color ?? "#0b3478",
     studentId: l.student?.id ?? "",
     studentName: l.student?.profile.full_name ?? "",
+    tutorId: l.tutor_id,
     tutorName: l.tutor?.profile.full_name ?? "",
     pendingChange: pending
       ? {
