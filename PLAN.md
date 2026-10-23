@@ -99,12 +99,14 @@
 ## Faz 5 — Finans (3,5 gün)
 - [ ] Paket tipleri yönetimi (seed: Tek Ders 950, Haftada 2 = 6.800, Haftada 3 = 9.600, Koçluk)
 - [ ] Öğrenciye paket tanımlama; **ders hakkı otomatik düşümü** (trigger) + kalan hak göstergesi (kurucu, eğitmen, öğrenci)
-- [ ] Hediye koçluk kuralı (Haftada 2+ paketinde koçluk dersleri `is_free`)
-- [ ] Tahsilatlar: ödeme kaydı formu, öğrenci bazında bakiye (paket tutarı − ödenen), gecikmiş vurgusu
-- [ ] Hakedişler: ay seçimi → eğitmen başına otomatik hesap (snapshot ücretler), düzeltme kalemi, "Ödendi" kapatma, dönem kilidi
-- [ ] Eğitmen **Hakedişlerim** sayfası; öğrenci **Ödemeler** sayfası (salt okunur)
-- [ ] Aylık finans özeti (gelir / eğitmen gideri / brüt kâr) + CSV
-- [ ] Unit test: hak düşümü, hakediş hesabı, kilit kuralları
+- [ ] Hak yalnızca `Tamamlandı` derste düşer — gelmedi/iptal/erteleme hak yakmaz, "Yeniden planla" kısayolu
+- [ ] Hediye koçluk kuralı (Haftada 2+ paketinde koçluk dersleri `is_free`, eğitmene 0 TL)
+- [ ] Tahsilatlar: manuel ödeme kaydı formu, öğrenci bazında bakiye (paket tutarı − ödenen), gecikmiş vurgusu
+- [ ] Hakedişler: **hafta / ay** seçimi → eğitmen başına otomatik hesap (yalnızca tamamlanan dersler, snapshot ücretler), düzeltme kalemi, "Ödendi" kaydı, dönem kilidi; eğitmen bazında ödeme sıklığı (haftalık/aylık)
+- [ ] **"Ödenecekler" listesi:** seçili dönemde kime ne kadar ödenecek + IBAN (ödeme panel dışında manuel)
+- [ ] **Gelir-Gider ekranı:** haftalık ↔ aylık geçiş; tahsilat, eğitmen gideri, net, ders sayısı (branş/eğitmen kırılımı), önceki dönemle kıyas + CSV
+- [ ] Eğitmen **Hakedişlerim** (haftalık/aylık); öğrenci **Ödemeler** sayfası (salt okunur)
+- [ ] Unit test: hak düşümü (sadece completed), hediye koçluk 0 TL, hakediş hesabı, kilit kuralları
 **Bitti tanımı:** Bir aylık gerçek senaryo (paket → dersler → ödeme → hakediş) uçtan uca doğru hesaplanıyor.
 **Commit:** `feat(faz-5): paket, tahsilat ve hakediş yönetimi`
 
@@ -151,14 +153,18 @@
 | Takvimde saat dilimi hataları | Yanlış ders saati | Tüm testler Europe/Istanbul; DB'de UTC |
 | Kapsam genişlemesi | Gecikme | Yeni istekler `BACKLOG` bölümüne, faz bitince değerlendirilir |
 
-## Açık sorular (Faz 5'ten önce netleşmeli)
-1. **Öğrenci gelmedi** durumunda ders hakkı yanar mı? (Varsayılan: yanar)
-2. Eğitmen ücretleri eğitmene göre mi değişiyor, yoksa sabit mi? Koçluk ücreti farklı mı?
-3. Hediye koçluk dersleri için eğitmene ücret ödeniyor mu?
-4. Eğitmen ödeme dönemi aylık mı (ayın 1'i–sonu)? Ödeme günü?
-5. Velinin ayrı hesabı gerekecek mi, yoksa öğrenci hesabını ortak kullanmaları yeterli mi? (Varsayılan: ortak)
-6. Eğitmen, kurucu onayı olmadan ders iptal/erteleme yapabilmeli mi? (Varsayılan: evet, loglanır)
-7. Hangi e-posta adresinden davet gönderilecek (ör. `panel@basarikodu.com`)?
+## Netleşen kararlar (23 Eki 2026, kurucular)
+- ✅ **Öğrencinin ders hakkı yanmaz.** Gelmedi/iptal durumunda öğrenci eğitmenle görüşüp dersi ileri tarihe erteler; hak yalnızca tamamlanan derste düşer.
+- ✅ **Panel ödeme yapmaz.** Kurucular eğitmenlere ve tahsilatları manuel yapar; panel sadece gelir-gideri ve "kime ne ödenecek"i gösterir.
+- ✅ **Gelir-gider ve dersler haftalık ve aylık** görüntülenebilir; eğitmen ödemeleri haftalık veya aylık yapılabilir.
+- ✅ **Hediye koçluk için eğitmene ekstra ödeme yok.**
+- ✅ Yapılmayan ders (gelmedi/iptal/ertelendi) için eğitmene ödeme yok.
+
+## Açık sorular
+1. Eğitmen ücretleri eğitmene göre mi değişiyor, yoksa herkese sabit mi? Ücretli koçluk görüşmesinin eğitmen ücreti farklı mı? (Varsayılan: eğitmen bazında ayarlanabilir)
+2. Velinin ayrı hesabı gerekecek mi? (Varsayılan: öğrenci hesabını ortak kullanır)
+3. Eğitmen, kurucu onayı olmadan ders iptal/erteleme yapabilmeli mi? (Varsayılan: evet, loglanır)
+4. Hangi e-posta adresinden davet gönderilecek (ör. `panel@basarikodu.com`)?
 
 ## BACKLOG (v1 sonrası)
 - Siteden gelen ön görüşme formlarının panele düşmesi (lead takibi) — **öneri: v1.1'in ilk işi**

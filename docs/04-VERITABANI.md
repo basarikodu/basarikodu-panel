@@ -49,6 +49,7 @@ erDiagram
 | rate_private | numeric(10,2) | Özel ders başı eğitmen ücreti |
 | rate_coaching | numeric(10,2) | Koçluk başı eğitmen ücreti |
 | iban | text null | Sadece kurucu + kendisi görür |
+| payout_frequency | enum (`weekly`,`monthly`) default `monthly` | Ödeme sıklığı |
 
 **tutor_subjects** (tutor_id, subject_id) — eğitmenin verebildiği branşlar
 
@@ -117,9 +118,11 @@ Seed: Tek Ders 950×1, Haftada 2 850×8=6.800, Haftada 3 800×12=9.600, Koçluk 
 **payments** (öğrenciden tahsilat)
 | id, student_id, student_package_id null, amount, paid_at (date), method (`havale`,`nakit`,`kart`,`diger`), note, recorded_by |
 
-**tutor_payouts** (eğitmene ödeme dönemi)
-| id, tutor_id, period (date — ayın 1'i), lesson_total (hesaplanan), adjustment_total, amount_paid, paid_at null, status (`open`,`paid`), note |
-Unique: (tutor_id, period).
+**tutor_payouts** (eğitmene ödeme dönemi — ödeme panel dışında manuel yapılır, burada kaydı tutulur)
+| id, tutor_id, period_start (date), period_end (date), lesson_count, lesson_total (hesaplanan), adjustment_total, amount_paid, paid_at null, status (`open`,`paid`), note |
+Unique: (tutor_id, period_start). Dönem uzunluğu eğitmenin `tutors.payout_frequency` (`weekly` | `monthly`) ayarından gelir; hafta Pazartesi–Pazar.
+
+Haftalık/aylık gelir-gider raporu ayrı tablo değil, view/RPC: `finance_summary(from, to)` → tahsilat toplamı, tamamlanan ders hakediş toplamı, net, ders sayısı (branş/eğitmen kırılımı).
 
 **payout_adjustments** — id, payout_id, amount (+/−), reason
 
@@ -149,9 +152,9 @@ Unique: (tutor_id, period).
 ## 3. Trigger / fonksiyonlar
 - `handle_new_user()` — auth.users insert → profiles satırı (rol, davetteki metadata'dan)
 - `custom_access_token_hook()` — JWT'ye `user_role` claim ekler
-- `apply_lesson_credit()` — lessons.status değişince ilgili `student_packages.used_count` güncellenir (aktif ve hakkı olan en eski paket otomatik seçilir)
-- `set_tutor_rate_snapshot()` — lesson insert'te eğitmen ücretini kopyalar
-- `compute_payout(tutor_id, period)` — RPC; dönem toplamını hesaplar
+- `apply_lesson_credit()` — ders **yalnızca `completed`** olunca (veya `completed`'dan geri alınınca) `student_packages.used_count` güncellenir (aktif ve hakkı olan en eski paket otomatik seçilir). `no_show` / iptal / erteleme hak düşürmez.
+- `set_tutor_rate_snapshot()` — lesson insert'te eğitmen ücretini kopyalar; `is_free=true` (hediye koçluk) ise 0
+- `compute_payout(tutor_id, period_start, period_end)` — RPC; dönemdeki `completed` derslerin toplamı
 - `guard_locked_period()` — ödenmiş dönemdeki dersin eğitmen tarafından değiştirilmesini engeller
 
 ## 4. Row Level Security özeti

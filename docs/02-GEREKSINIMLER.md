@@ -42,8 +42,10 @@
 - **Paketler (tanım):** Tek Ders, Haftada 2, Haftada 3, Koçluk — fiyat ve ders adedi düzenlenebilir
 - **Öğrenci paketleri:** öğrenciye paket tanımla (başlangıç tarihi, ders hakkı, tutar, indirim) → ders tamamlandıkça hak düşer
 - **Tahsilatlar (öğrenciden):** manuel ödeme kaydı (tarih, tutar, yöntem: Havale/EFT, Nakit, Kart, Diğer; açıklama), paketle ilişkilendirme, borç/alacak bakiyesi
-- **Hakedişler (eğitmene):** seçilen dönemde (ay) tamamlanan dersler × eğitmen birim ücreti = otomatik hesap; kurucu "ödendi" işaretler (tarih, tutar, not); düzeltme kalemi eklenebilir (prim/kesinti)
-- Aylık özet: gelir, eğitmen gideri, brüt kâr
+- **Hakedişler (eğitmene):** seçilen dönemde (**hafta veya ay**) tamamlanan dersler × eğitmen birim ücreti = otomatik hesap; yalnızca `Tamamlandı` dersler sayılır, hediye koçluk için ekstra ödeme yok. Kurucu ödemeyi panel dışında manuel yapar ve panelde "ödendi" işaretler (tarih, tutar, not); düzeltme kalemi eklenebilir (prim/kesinti). Her eğitmenin ödeme sıklığı ayarlanabilir (haftalık / aylık).
+- **"Ödenecekler" listesi:** seçilen hafta/ay için eğitmen bazında ödenecek tutar, IBAN, ödendi/bekliyor — kurucular bu listeye bakarak havaleleri yapar
+- **Gelir-Gider görünümü (haftalık ↔ aylık geçiş):** tahsilat (gelir), eğitmen hakedişi (gider), net; aynı dönemde yapılan ders sayısı (branş/eğitmen kırılımı); önceki dönemle karşılaştırma
+- Panelde online ödeme/para transferi **yok** — sadece kayıt ve hesap
 
 ### K6 — Akademik & İçerik Takvimi
 - Ay / hafta / liste görünümleri; **sürükle-bırak ile tarih değiştirme**
@@ -83,13 +85,14 @@
 - Dersi işaretle: **Tamamlandı / Öğrenci gelmedi / İptal (eğitmen) / İptal (öğrenci) / Ertelendi**
 - Tamamlandıysa: işlenen konu, ödev, öğrenci performans notu (1–5), veliye görünür kısa not
 - Ertelendiyse: yeni tarih seç → ders hakkı yanmaz
+- **Öğrencinin hakkı hiçbir durumda yanmaz:** "Öğrenci gelmedi" / iptal / erteleme durumlarında hak düşmez; eğitmen öğrenciyle görüşüp dersi ileri bir tarihe planlar ("Yeniden planla" kısayolu). Bu derslerden eğitmene ödeme çıkmaz.
 
 ### E4 — Öğrencilerim
 - Atanmış öğrenci listesi: sınıf, hedef, kalan ders hakkı, son ders tarihi
 - Öğrenci detayı: ders geçmişi, konu/ödev akışı, eğitmene özel notlar (öğrenci görmez)
 
 ### E5 — Hakedişlerim
-- Ay bazında tamamlanan dersler ve tutar, ödenen/bekleyen
+- Hafta ve ay bazında tamamlanan dersler ve tutar, ödenen/bekleyen (hediye koçluklar 0 TL olarak listelenir)
 
 ## 4. Öğrenci / Veli paneli
 
