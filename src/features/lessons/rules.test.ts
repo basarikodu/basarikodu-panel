@@ -7,6 +7,7 @@ import {
   canWithdraw,
   findConflicts,
   istanbulToUtc,
+  lessonTypeForSubject,
   isDateKey,
   isTimeValue,
   toDateKey,
@@ -101,5 +102,13 @@ describe("eğitmen işlem izinleri", () => {
     expect(canWithdraw({ status: "planned", approval_status: "approved", starts_at: future })).toBe(
       false,
     );
+  });
+});
+
+describe("lessonTypeForSubject", () => {
+  it("Koçluk branşını koçluk, diğerlerini özel ders sayar", () => {
+    expect(lessonTypeForSubject("Koçluk")).toBe("kocluk");
+    expect(lessonTypeForSubject(" KOÇLUK ")).toBe("kocluk");
+    expect(lessonTypeForSubject("Matematik")).toBe("ozel_ders");
   });
 });

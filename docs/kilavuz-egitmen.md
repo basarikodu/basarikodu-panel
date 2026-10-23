@@ -4,8 +4,8 @@
 
 ## Ders planlama
 1. **Takvim** sayfasında boş bir saate tıklayın (mobilde gün seçip "Bu güne ders planla") ya da **Ders planla** düğmesine basın.
-2. Öğrenci ve branşı seçin (yalnızca size atanmış öğrenciler listelenir), tarih ve saati girin.
-3. Her hafta aynı saatteyse **Tekrar** alanından 4 / 8 / 12 / 16 hafta seçin.
+2. Öğrenciyi seçin (yalnızca size atanmış öğrenciler listelenir), sonra **Branş**ı seçin (kurucuların bu öğrenci için tanımladığı branşlar), tarih ve saati girin.
+3. Süre branştan gelir (özel ders 60 dk, koçluk 40 dk; kurucular Ayarlar'dan değiştirir). Aynı gün farklı branşta arka arkaya ders planlayabilirsiniz (ör. 17:00 Matematik, 18:00 Fizik).
 4. **Onaya gönder** → ders kurucu onayına düşer. Takvimde kesikli çerçeve ve ⏳ ile "Onay bekliyor" görünür; onaylanınca öğrencinin takvimine eklenir.
 5. Kalan ders hakkı biten öğrenci için uyarı çıkar; kuruculara danışın.
 

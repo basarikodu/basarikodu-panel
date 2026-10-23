@@ -4,7 +4,7 @@
 
 ## Günlük iş akışı
 1. **Genel Bakış:** bugünkü dersler, onay bekleyen talepler, bu ayın gelir-gideri.
-2. **Onay Bekleyenler:** eğitmenlerin yeni ders, erteleme ve iptal talepleri. Tekrarlayan seriler tek tıkla onaylanır; reddederken eğitmenin göreceği sebebi yazın.
+2. **Onay Bekleyenler:** eğitmenlerin yeni ders, erteleme ve iptal talepleri. Seçerek toplu onaylanabilir; reddederken eğitmenin göreceği sebebi yazın.
 3. **Dersler:** tüm derslerin haftalık takvimi, eğitmen/öğrenci filtresi. Sizin eklediğiniz/düzenlediğiniz dersler onay beklemez.
 
 ## Hesaplar
@@ -13,7 +13,7 @@
 - **Pasife al:** kullanıcı giriş yapamaz, geçmiş kayıtlar korunur.
 
 ## Öğrenci sayfası
-- **Eğitmen ata:** branş bazında (eğitmen yalnızca atandığı öğrencilere ders planlayabilir).
+- **Eğitmen ata:** eğitmeni seçip öğrencinin ondan alacağı branşları işaretleyin (birden fazla seçilebilir). Eğitmen ders planlarken yalnızca bu branşları görür; ders tipi ve süresi branştan gelir (Koçluk → koçluk).
 - **Aylık paket:** 4 / 8 / 12 / özel ders; tutar Ayarlar'daki fiyatlardan otomatik gelir (değiştirilebilir).
 - **Tahsilat:** öğrenciden alınan ödemeyi kaydedin.
 - Ay başında **Öğrenciler → Aylık paketler** ile tüm öğrencilerin yeni ay paketini önceki aydan tek seferde oluşturun.

@@ -15,14 +15,6 @@ import { planLessons } from "@/features/lessons/actions";
 import type { PlanningContext } from "@/features/lessons/queries";
 import { LESSON_TYPE_LABELS } from "@/lib/constants";
 
-const REPEAT_OPTIONS = [
-  { value: "1", label: "Tek ders" },
-  { value: "4", label: "Her hafta · 4 hafta" },
-  { value: "8", label: "Her hafta · 8 hafta" },
-  { value: "12", label: "Her hafta · 12 hafta" },
-  { value: "16", label: "Her hafta · 16 hafta" },
-];
-
 export function PlanLessonDialog({
   open,
   onOpenChange,
@@ -36,11 +28,19 @@ export function PlanLessonDialog({
   prefill: { date: string; time: string };
   founderMode?: boolean;
 }) {
+  const students = groupByStudent(context.assignments);
+  const [studentId, setStudentId] = useState(students.length === 1 ? students[0].id : "");
+  const student = students.find((st) => st.id === studentId);
   const [assignmentId, setAssignmentId] = useState(
-    context.assignments.length === 1 ? context.assignments[0].id : "",
+    student?.options.length === 1 ? student.options[0].id : "",
   );
-  const selected = context.assignments.find((a) => a.id === assignmentId);
-  const defaultDuration = selected ? context.durations[selected.lessonType] : 60;
+  const selected = student?.options.find((o) => o.id === assignmentId);
+
+  function selectStudent(id: string) {
+    setStudentId(id);
+    const options = students.find((st) => st.id === id)?.options ?? [];
+    setAssignmentId(options.length === 1 ? options[0].id : "");
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -65,27 +65,43 @@ export function PlanLessonDialog({
             onSuccess={() => onOpenChange(false)}
           >
             <SelectField
-              name="assignment_id"
-              label="Öğrenci ve branş"
+              name="student"
+              label="Öğrenci"
               required
               placeholder="Öğrenci seçin"
-              value={assignmentId}
-              onChange={(e) => setAssignmentId(e.target.value)}
-              options={context.assignments.map((a) => ({
-                value: a.id,
-                label: `${a.studentName} — ${a.subjectName} (${LESSON_TYPE_LABELS[a.lessonType]})`,
-              }))}
+              value={studentId}
+              onChange={(e) => selectStudent(e.target.value)}
+              options={students.map((st) => ({ value: st.id, label: st.name }))}
             />
-            {selected && selected.remaining !== null && selected.remaining <= 0 && (
+            {student && student.remaining !== null && student.remaining <= 0 && (
               <p className="flex items-start gap-2 rounded-xl bg-warning-soft p-3 text-sm text-warning">
                 <AlertTriangleIcon className="mt-0.5 size-4 shrink-0" />
-                {selected.studentName} öğrencisinin ders hakkı kalmadı. Planlamadan önce kuruculara
+                {student.name} öğrencisinin ders hakkı kalmadı. Planlamadan önce kuruculara
                 danışın.
               </p>
             )}
-            {selected && selected.remaining !== null && selected.remaining > 0 && (
+            {student && student.remaining !== null && student.remaining > 0 && (
               <p className="-mt-2 text-xs text-muted-foreground">
-                Kalan ders hakkı: <b className="text-foreground">{selected.remaining}</b>
+                Kalan ders hakkı: <b className="text-foreground">{student.remaining}</b>
+              </p>
+            )}
+            <SelectField
+              name="assignment_id"
+              label="Branş"
+              required
+              disabled={!student}
+              placeholder={student ? "Branş seçin" : "Önce öğrenci seçin"}
+              value={assignmentId}
+              onChange={(e) => setAssignmentId(e.target.value)}
+              options={(student?.options ?? []).map((o) => ({
+                value: o.id,
+                label: o.subjectName,
+              }))}
+            />
+            {selected && (
+              <p className="-mt-2 text-xs text-muted-foreground">
+                Süre: <b className="text-foreground">{context.durations[selected.lessonType]} dk</b>{" "}
+                ({LESSON_TYPE_LABELS[selected.lessonType]})
               </p>
             )}
             <div className="grid grid-cols-2 gap-4">
@@ -104,18 +120,6 @@ export function PlanLessonDialog({
                 required
                 defaultValue={prefill.time}
               />
-              <TextField
-                key={defaultDuration}
-                name="duration"
-                label="Süre (dk)"
-                type="number"
-                min={15}
-                max={240}
-                step={5}
-                required
-                defaultValue={defaultDuration}
-              />
-              <SelectField name="weeks" label="Tekrar" defaultValue="1" options={REPEAT_OPTIONS} />
             </div>
             <TextField
               name="meeting_url"
@@ -129,4 +133,27 @@ export function PlanLessonDialog({
       </DialogContent>
     </Dialog>
   );
+}
+
+type Assignment = PlanningContext["assignments"][number];
+
+/** Atamaları öğrenciye göre toplar: formda önce öğrenci, sonra o öğrencinin branşları */
+function groupByStudent(assignments: Assignment[]) {
+  const map = new Map<
+    string,
+    { id: string; name: string; remaining: number | null; options: Assignment[] }
+  >();
+  for (const a of assignments) {
+    const entry = map.get(a.studentId) ?? {
+      id: a.studentId,
+      name: a.studentName,
+      remaining: a.remaining,
+      options: [],
+    };
+    entry.options.push(a);
+    map.set(a.studentId, entry);
+  }
+  for (const entry of map.values())
+    entry.options.sort((x, y) => x.subjectName.localeCompare(y.subjectName, "tr"));
+  return [...map.values()];
 }

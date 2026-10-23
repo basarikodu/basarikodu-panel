@@ -1,46 +1,66 @@
 "use client";
 
 import { useState } from "react";
-import { SelectField } from "@/components/shared/form-fields";
+import { CheckboxGroupField, SelectField } from "@/components/shared/form-fields";
 
-type Subject = { id: string; name: string };
+type Subject = { id: string; name: string; color?: string | null };
 type Tutor = { id: string; fullName: string; subjectIds: string[] };
 
-/** Branş seçilince yalnızca o branşı veren eğitmenler listelenir. */
-export function AssignFields({ subjects, tutors }: { subjects: Subject[]; tutors: Tutor[] }) {
-  const [subjectId, setSubjectId] = useState("");
-  const coaching = subjects.find((s) => s.id === subjectId)?.name === "Koçluk";
-  const matching = subjectId ? tutors.filter((t) => t.subjectIds.includes(subjectId)) : tutors;
+/**
+ * Önce eğitmen, sonra öğrencinin o eğitmenden alacağı branşlar (birden fazla).
+ * Yalnızca eğitmenin verdiği ve henüz atanmamış branşlar listelenir.
+ * `assigned`: "tutorId:subjectId" çiftleri.
+ */
+export function AssignFields({
+  subjects,
+  tutors,
+  assigned,
+}: {
+  subjects: Subject[];
+  tutors: Tutor[];
+  assigned: string[];
+}) {
+  const [tutorId, setTutorId] = useState("");
+  const tutor = tutors.find((t) => t.id === tutorId);
+  const available = tutor
+    ? subjects.filter(
+        (s) => tutor.subjectIds.includes(s.id) && !assigned.includes(`${tutor.id}:${s.id}`),
+      )
+    : [];
 
   return (
     <div className="grid gap-4">
       <SelectField
-        name="subject_id"
-        label="Branş"
-        required
-        placeholder="Branş seçin"
-        value={subjectId}
-        onChange={(e) => setSubjectId(e.target.value)}
-        options={subjects.map((s) => ({ value: s.id, label: s.name }))}
-      />
-      <SelectField
         name="tutor_id"
         label="Eğitmen"
         required
-        placeholder={matching.length ? "Eğitmen seçin" : "Bu branşı veren eğitmen yok"}
-        options={matching.map((t) => ({ value: t.id, label: t.fullName }))}
-        hint={subjectId ? "Eğitmenin branşları eğitmen sayfasından düzenlenir" : undefined}
+        placeholder="Eğitmen seçin"
+        value={tutorId}
+        onChange={(e) => setTutorId(e.target.value)}
+        options={tutors.map((t) => ({ value: t.id, label: t.fullName }))}
       />
-      <SelectField
-        key={coaching ? "kocluk" : "ozel"}
-        name="lesson_type"
-        label="Ders tipi"
-        defaultValue={coaching ? "kocluk" : "ozel_ders"}
-        options={[
-          { value: "ozel_ders", label: "Özel ders (60 dk)" },
-          { value: "kocluk", label: "Koçluk (40 dk)" },
-        ]}
-      />
+      {tutor &&
+        (available.length ? (
+          <CheckboxGroupField
+            key={tutor.id}
+            name="subject_ids"
+            label="Alacağı branşlar"
+            options={available.map((s) => ({
+              value: s.id,
+              label: s.name,
+              color: s.color ?? undefined,
+            }))}
+          />
+        ) : (
+          <p className="rounded-xl bg-warning-soft p-3 text-sm text-warning">
+            Bu eğitmenin verdiği tüm branşlar zaten atanmış. Eğitmenin branşları eğitmen
+            sayfasından düzenlenir.
+          </p>
+        ))}
+      <p className="text-xs text-muted-foreground">
+        Ders süresi branştan gelir: Koçluk {"→"} koçluk süresi, diğerleri özel ders süresi
+        (Ayarlar).
+      </p>
     </div>
   );
 }

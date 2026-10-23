@@ -121,7 +121,7 @@ export async function listStudents(month: MonthKey = toMonthKey()) {
     supabase
       .from("students")
       .select(
-        "id, grade, goal, school, guardian_name, guardian_phone, profile:profiles!inner(full_name, email, phone, is_active), tutor_students(id, is_active, lesson_type, subject:subjects(name, color), tutor:tutors(id, profile:profiles!inner(full_name)))",
+        "id, grade, goal, school, guardian_name, guardian_phone, profile:profiles!inner(full_name, email, phone, is_active), tutor_students(id, is_active, lesson_type, subject:subjects(id, name, color), tutor:tutors(id, profile:profiles!inner(full_name)))",
       ),
     getCreditBalances(month),
   ]);
