@@ -19,7 +19,7 @@ export function SidebarNav({ role, badges }: { role: UserRole; badges?: NavBadge
   const pathname = usePathname();
   const root = items[0].href;
   return (
-    <nav className="grid gap-1">
+    <nav className="grid gap-1.5">
       {items.map(({ href, label, icon: Icon, badgeKey }) => {
         const active = isActive(pathname, href, root);
         const badge = badgeKey ? badges?.[badgeKey] : undefined;
@@ -29,18 +29,20 @@ export function SidebarNav({ role, badges }: { role: UserRole; badges?: NavBadge
             href={href}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition",
+              "flex items-center gap-3.5 rounded-2xl px-4 py-3 text-[15px] font-medium transition",
               active
-                ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                : "text-sidebar-foreground/80 hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground",
+                ? "bg-white/10 text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.06)]"
+                : "text-sidebar-foreground/75 hover:bg-white/5 hover:text-white",
             )}
           >
-            <Icon className={cn("size-4.5", active && "text-sidebar-ring")} />
+            <Icon className={cn("size-[18px]", active && "text-sidebar-ring")} />
             <span className="flex-1">{label}</span>
             {badge ? (
               <span className="rounded-full bg-warning px-2 py-0.5 text-xs font-semibold text-white tabular-nums">
                 {badge}
               </span>
+            ) : active ? (
+              <span className="size-1.5 rounded-full bg-sidebar-ring" aria-hidden />
             ) : null}
           </Link>
         );

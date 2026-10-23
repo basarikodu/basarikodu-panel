@@ -116,3 +116,28 @@ export function formatMonthKey(key: MonthKey): string {
   // Ayın ortası: saat dilimi kaymasından etkilenmez
   return formatMonth(new Date(Date.UTC(y, m - 1, 15)));
 }
+
+const longDateFormatter = new Intl.DateTimeFormat(LOCALE, {
+  timeZone: TIME_ZONE,
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+  weekday: "long",
+});
+
+/** "23 Ekim 2026 Cuma" */
+export function formatLongDate(d: Date | string): string {
+  const parts = longDateFormatter.formatToParts(toDate(d));
+  const get = (t: string) => parts.find((p) => p.type === t)?.value ?? "";
+  return `${get("day")} ${get("month")} ${get("year")} ${get("weekday")}`;
+}
+
+/** İstanbul saatine göre günün başlangıcı ve ertesi günün başlangıcı (UTC anları) */
+export function getDayRange(ref: Date = new Date()) {
+  const local = new Date(ref.getTime() + ISTANBUL_OFFSET_MS);
+  const start = Date.UTC(local.getUTCFullYear(), local.getUTCMonth(), local.getUTCDate());
+  return {
+    start: new Date(start - ISTANBUL_OFFSET_MS),
+    end: new Date(start + 86_400_000 - ISTANBUL_OFFSET_MS),
+  };
+}

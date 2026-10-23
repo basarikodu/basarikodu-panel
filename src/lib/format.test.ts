@@ -4,7 +4,9 @@ import {
   formatDateTime,
   formatMoney,
   formatTime,
+  formatLongDate,
   formatMonthKey,
+  getDayRange,
   isMonthKey,
   shiftMonthKey,
   toMonthKey,
@@ -104,5 +106,16 @@ describe("ay anahtarları", () => {
     expect(formatMonthKey("2026-10-01")).toBe("Ekim 2026");
     expect(isMonthKey("2026-10-01")).toBe(true);
     expect(isMonthKey("2026-10-15")).toBe(false);
+  });
+});
+
+describe("uzun tarih ve gün aralığı", () => {
+  it("referanstaki gibi '23 Ekim 2026 Cuma' yazar", () => {
+    expect(formatLongDate("2026-10-23T09:00:00Z")).toBe("23 Ekim 2026 Cuma");
+  });
+  it("günü İstanbul gece yarısından başlatır", () => {
+    const { start, end } = getDayRange(new Date("2026-10-23T22:30:00Z")); // 24 Eki 01:30 TR
+    expect(start.toISOString()).toBe("2026-10-23T21:00:00.000Z");
+    expect(end.toISOString()).toBe("2026-10-24T21:00:00.000Z");
   });
 });
