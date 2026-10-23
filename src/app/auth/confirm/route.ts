@@ -14,5 +14,5 @@ export async function GET(request: NextRequest) {
     const { error } = await supabase.auth.verifyOtp({ type, token_hash: tokenHash });
     if (!error) return NextResponse.redirect(`${origin}/sifre-belirle`);
   }
-  return NextResponse.redirect(`${origin}/giris?hata=baglanti`);
+  return NextResponse.redirect(`${origin}/?hata=baglanti`);
 }

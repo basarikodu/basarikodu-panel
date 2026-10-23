@@ -38,7 +38,7 @@ export default function SetPasswordPage() {
 
   useEffect(() => {
     if (state?.success) {
-      const t = setTimeout(() => router.replace("/giris"), 1200);
+      const t = setTimeout(() => router.replace("/"), 1200);
       return () => clearTimeout(t);
     }
   }, [state, router]);
@@ -48,8 +48,8 @@ export default function SetPasswordPage() {
       title="Şifreni belirle"
       description="BaşarıKodu paneline giriş için bir şifre oluştur."
       footer={
-        <Link href="/giris" className="hover:underline">
-          ← Girişe dön
+        <Link href="/" className="hover:underline">
+          ← Ana sayfa
         </Link>
       }
     >

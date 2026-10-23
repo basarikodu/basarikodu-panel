@@ -6,12 +6,13 @@
 
 | Rol | Kim | Giriş |
 |---|---|---|
-| `founder` (Kurucu) | 3 kurucu | `/kurucu/giris` |
-| `tutor` (Eğitmen) | Hocalar ve koçlar | `/giris` |
-| `student` (Öğrenci / Veli) | Öğrenci; veli aynı hesabı kullanır | `/giris` |
+| `founder` (Kurucu) | 3 kurucu | `/kurucu/giris` — **ana sayfada bağlantısı yok**, adresten girilir |
+| `tutor` (Eğitmen) | Hocalar ve koçlar | `/giris/egitmen` (ana sayfada "Eğitmen Girişi") |
+| `student` (Öğrenci / Veli) | Öğrenci; veli aynı hesabı kullanır | `/giris/ogrenci` (ana sayfada "Öğrenci / Veli Girişi") |
 
 - Kayıt (sign-up) yok. Hesapları kurucular açar; **`panel@basarikodu.com`** adresinden davet e-postası gider, kullanıcı şifresini belirler.
 - Öğrenci ve veli **aynı hesap, aynı panel**.
+- Her giriş kapısı yalnızca kendi rolüne açıktır (eğitmen öğrenci girişinden giremez, tersi de).
 
 ## 2. Kurucu paneli (v1)
 

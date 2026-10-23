@@ -12,7 +12,7 @@ export function LoginForm({
   gate,
   initialError,
 }: {
-  gate: "general" | "founder";
+  gate: "student" | "tutor" | "founder";
   initialError?: string;
 }) {
   const [state, action, pending] = useActionState(

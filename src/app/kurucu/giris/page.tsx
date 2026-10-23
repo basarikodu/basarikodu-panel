@@ -17,8 +17,8 @@ export default async function FounderLoginPage() {
       title="Kurucu Girişi"
       description="Yönetim paneli yalnızca kurucular içindir."
       footer={
-        <Link href="/giris" className="hover:underline">
-          ← Eğitmen / Öğrenci girişi
+        <Link href="/" className="hover:underline">
+          ← Ana sayfa
         </Link>
       }
     >

@@ -4,7 +4,21 @@ import { NextResponse, type NextRequest } from "next/server";
 // Oturum çerezlerini yeniler ve oturumsuz kullanıcıyı giriş sayfasına yönlendirir.
 // Rol kontrolü sayfa/layout'larda requireRole() ile, asıl güvenlik RLS'dedir.
 
-const PUBLIC_PATHS = ["/", "/giris", "/kurucu/giris", "/sifremi-unuttum", "/vitrin"];
+const PUBLIC_PATHS = [
+  "/",
+  "/giris/ogrenci",
+  "/giris/egitmen",
+  "/kurucu/giris",
+  "/sifremi-unuttum",
+  "/vitrin",
+];
+
+function loginPathFor(pathname: string) {
+  if (pathname.startsWith("/kurucu")) return "/kurucu/giris";
+  if (pathname.startsWith("/egitmen")) return "/giris/egitmen";
+  if (pathname.startsWith("/ogrenci")) return "/giris/ogrenci";
+  return "/";
+}
 
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });
@@ -33,7 +47,7 @@ export async function proxy(request: NextRequest) {
 
   if (!isLoggedIn && !isPublic && pathname !== "/sifre-belirle") {
     const url = request.nextUrl.clone();
-    url.pathname = pathname.startsWith("/kurucu") ? "/kurucu/giris" : "/giris";
+    url.pathname = loginPathFor(pathname);
     url.search = "";
     return NextResponse.redirect(url);
   }
