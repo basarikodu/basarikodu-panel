@@ -19,7 +19,7 @@ export function SidebarNav({ role, badges }: { role: UserRole; badges?: NavBadge
   const pathname = usePathname();
   const root = items[0].href;
   return (
-    <nav className="grid gap-1.5">
+    <nav className="grid gap-1 [@media(max-height:820px)]:gap-0.5">
       {items.map(({ href, label, icon: Icon, badgeKey }) => {
         const active = isActive(pathname, href, root);
         const badge = badgeKey ? badges?.[badgeKey] : undefined;
@@ -29,7 +29,7 @@ export function SidebarNav({ role, badges }: { role: UserRole; badges?: NavBadge
             href={href}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "flex items-center gap-3.5 rounded-2xl px-4 py-3 text-[15px] font-medium transition",
+              "flex items-center gap-3.5 rounded-2xl px-4 py-3 text-[15px] font-medium transition [@media(max-height:820px)]:py-2.5",
               active
                 ? "bg-white/10 text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.06)]"
                 : "text-sidebar-foreground/75 hover:bg-white/5 hover:text-white",
