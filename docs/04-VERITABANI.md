@@ -1,8 +1,8 @@
 # 04 · Veritabanı Şeması (Supabase / PostgreSQL)
 
-> **v1 kapsamı:** `profiles`, `tutors`, `tutor_subjects`, `students`, `subjects`, `tutor_students`, `lesson_series`, `lessons`, `lesson_change_requests`, `payments`, `tutor_payouts`, `app_settings`.
+> **v1 kapsamı:** `profiles`, `tutors`, `tutor_subjects`, `students`, `subjects`, `tutor_students`, `lesson_series`, `lessons`, `lesson_change_requests`, `student_packages` (aylık paket), `payments`, `tutor_payouts`, `app_settings` + `student_credit_balance` view.
 > `lessons` tablosunda v1'de kullanılan sonuç alanları: `status`, `topic` (eğitmen notu). `homework*`, `performance`, `note_private`, `student_package_id` kolonları **v1 sonrası** eklenir.
-> **v1 sonrası:** `package_types`, `student_packages` (ders hakkı), `payout_adjustments`, `calendar_events` (akademik & içerik takvimi), `audit_log`. Bu dokümanda tasarımları hazır tutulur.
+> **v1 sonrası:** `package_types` (şablonlar), `payout_adjustments`, `calendar_events` (akademik & içerik takvimi), `audit_log`. Bu dokümanda tasarımları hazır tutulur.
 
 ## 1. İlişki diyagramı
 
@@ -138,9 +138,24 @@ Eğitmen ücreti **tüm eğitmenler için aynıdır**; değişiklik sadece sonra
 **package_types** — id, name ("Haftada 2 Ders"), lesson_type, lesson_count (8), unit_price (850), total_price (6800), includes_free_coaching (bool), is_active
 Seed: Tek Ders 950×1, Haftada 2 850×8=6.800, Haftada 3 800×12=9.600, Koçluk (fiyat kurucu girer).
 
-**student_packages**
-| id, student_id, package_type_id null, name, lesson_count, used_count (trigger ile), price_total, discount, starts_on, ends_on null, status (`active`,`completed`,`cancelled`), notes |
-`remaining = lesson_count - used_count` (generated column).
+**student_packages** — öğrencinin **aylık** paketi (v1)
+| Kolon | Tip | Not |
+|---|---|---|
+| id | uuid PK | |
+| student_id | uuid → students | |
+| month | date | Ayın 1'i (ör. 2026-11-01) |
+| lesson_count | smallint | 4 / 8 / 12 / özel |
+| price_total | numeric(10,2) | Paket tutarı (beklenen gelir) |
+| note | text null | |
+| created_by | uuid | |
+Unique: (student_id, month).
+
+**student_credit_balance** (view) — öğrenci bazında hak hesabı, sayaç tutulmaz, her seferinde hesaplanır:
+- `total_credits` = Σ `student_packages.lesson_count` (bugüne kadarki aylar)
+- `used_credits` = `completed` ve `is_free = false` ders sayısı
+- `remaining` = total − used (kullanılmayan hak sonraki aya devreder)
+- `month_package`, `month_completed`, `carried_over` (bu ay için gösterim)
+Öğrenci kendi satırını, eğitmen atanmış öğrencilerinin satırını (tutarsız), kurucu tümünü görür.
 
 **payments** (öğrenciden tahsilat)
 | id, student_id, student_package_id null, amount, paid_at (date), method (`havale`,`nakit`,`kart`,`diger`), note, recorded_by |
@@ -179,7 +194,7 @@ Haftalık/aylık gelir-gider raporu ayrı tablo değil, view/RPC: `finance_summa
 ## 3. Trigger / fonksiyonlar
 - `handle_new_user()` — auth.users insert → profiles satırı (rol, davetteki metadata'dan)
 - `custom_access_token_hook()` — JWT'ye `user_role` claim ekler
-- `apply_lesson_credit()` — ders **yalnızca `completed`** olunca (veya `completed`'dan geri alınınca) `student_packages.used_count` güncellenir (aktif ve hakkı olan en eski paket otomatik seçilir). `no_show` / iptal / erteleme hak düşürmez.
+- Ders hakkı için trigger yok: `student_credit_balance` view'ı yalnızca `completed` dersleri sayar; `no_show` / iptal / erteleme hak düşürmez. Durum düzeltmeleri otomatik doğru yansır.
 - `set_tutor_rate_snapshot()` — ders onaylandığında `app_settings`'teki ortak ücreti kopyalar; `is_free=true` (hediye koçluk) ise 0
 - `force_pending_for_tutor()` — eğitmenin insert ettiği derste `approval_status`'ü zorla `pending` yapar (istemciye güvenilmez)
 - `approve_lesson_request(request_id | lesson_ids[])` / `reject_lesson_request(..., reason)` — yalnızca founder; talebi atomik uygular (erteleme → saat değişir, iptal → status değişir), çakışma varsa hata döner

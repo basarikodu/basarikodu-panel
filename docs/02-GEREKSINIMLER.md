@@ -34,10 +34,15 @@ Basit sayı kartları; **hafta ↔ ay** geçişli:
 - Detay: öğrencileri ve ders geçmişi
 
 ### K4 — Öğrenciler
-- Liste: ad, sınıf, hedef (YKS/LGS/Okul), eğitmen(ler)i, bu ay ders sayısı
+- Liste: ad, sınıf, hedef (YKS/LGS/Okul), eğitmen(ler)i, bu ay paket / tamamlanan ders, **kalan hak** (azalanlar sarı, bitenler kırmızı)
 - Ekle / düzenle (ad, sınıf, hedef, veli adı/telefonu, not) / pasife al, davet gönder
 - **Eğitmen atama:** öğrenciye branş bazında eğitmen ata (ör. Matematik → Ahmet Hoca). Eğitmen yalnızca atanan öğrencileri görür.
-- Detay: ders geçmişi, ödemeleri
+- **Aylık paket / ders hakkı:** kurucu öğrenciye her ay için paket tanımlar — **4, 8, 12 ders** veya özel sayı, paket tutarı ve not.
+  - "Önceki aydan devam ettir": tek tıkla tüm öğrencilerin yeni ay paketini bir önceki aya göre oluştur, gerekirse tek tek düzelt.
+  - Hak yanmaz: ay içinde kullanılmayan dersler sonraki aya **devreder**.
+  - Hesap: *Toplam hak* = tüm paketlerdeki ders sayısı; *Kullanılan* = tamamlanan dersler (hediye koçluk hariç); *Kalan* = Toplam − Kullanılan.
+- Liste ve detayda: "Ekim: 8 ders paketi · 5 tamamlandı · 1 devreden · **4 hak kaldı**", ay ay ders sayısı ve hangi derslerin alındığı (tarih, branş, eğitmen)
+- Detay: ders geçmişi, paketleri, ödemeleri
 
 ### K5 — Dersler
 - **Ne zaman, kim, hangi ders:** tüm derslerin listesi ve haftalık takvimi
@@ -45,7 +50,7 @@ Basit sayı kartları; **hafta ↔ ay** geçişli:
 - Kurucu dersi doğrudan ekleyebilir/düzenleyebilir/iptal edebilir (onaysız)
 
 ### K6 — Gelir-Gider ve Ödemeler (hafta ↔ ay)
-- **Gelir:** öğrenciden alınan ödemeleri manuel kaydet (öğrenci, tutar, tarih, yöntem, not)
+- **Gelir:** öğrenciden alınan ödemeleri manuel kaydet (öğrenci, tutar, tarih, yöntem, not); öğrenci bazında **paket tutarı vs. ödenen** → bekleyen tahsilat
 - **Gider / Ödenecekler:** seçilen hafta veya ayda her eğitmenin **tamamlanan ders sayısı × ortak ücret** = ödenecek tutar, IBAN, durum (Bekliyor / Ödendi)
 - Ödeme panel dışında yapılır; kurucu "Ödendi" işaretler (tarih, not)
 - Özet: toplam gelir, toplam gider, net
@@ -67,18 +72,20 @@ Basit sayı kartları; **hafta ↔ ay** geçişli:
 - Öğrencinin hakkı yanmaz: gelmedi/iptal durumunda ders ileri tarihe ertelenir. Yalnızca tamamlanan ders sayılır ve eğitmene ödenir.
 
 ### E3 — Öğrencilerim
-- Atanmış öğrenciler: sınıf, hedef, veli telefonu, son/sıradaki ders
+- Atanmış öğrenciler: sınıf, hedef, veli telefonu, son/sıradaki ders, **kalan ders hakkı** (tutar gösterilmez) — planlarken hakkı biten öğrenci için uyarı
 - Öğrenci detayı: o öğrenciyle yapılan dersler
 
 ## 4. Öğrenci / Veli paneli (v1)
 
 ### Ö1 — Haftalık takvim (ana ekran)
+- **Ders hakkı kartı:** "Ekim paketi: 8 ders · 5 tamamlandı · **Kalan hakkın: 4**" + ilerleme çubuğu (devreden hak varsa ayrıca belirtilir)
 - Sıradaki ders kartı (tarih, saat, eğitmen, branş, **Derse Katıl** linki)
 - Haftalık takvimde onaylı dersler (mobilde gün listesi)
 
 ### Ö2 — Ders geçmişi
 - Liste: tarih, eğitmen, branş, durum, eğitmenin notu
-- Üstte basit toplam: "Toplam 24 ders · Bu ay 8 ders"
+- Ay ay özet: hangi ay kaç derslik paket, kaç ders alındı, hangi dersler (branş/eğitmen)
+- Üstte toplam: "Toplam 24 ders · Bu ay 5 ders · Kalan hak 4"
 
 ### Ö3 — Profil
 - Bilgiler, şifre değiştir, WhatsApp destek butonu
@@ -92,7 +99,7 @@ Basit sayı kartları; **hafta ↔ ay** geçişli:
 
 ## 6. v1 sonrası (kullanım başladıktan sonra, öncelik sırasıyla)
 1. **Akademik & içerik takvimi** — reels planı (Sal/Per/Cmt ritmi), sürükle-bırak, YKS/LGS/yazılı tarihleri, içerik durum hattı (Fikir → Yayınlandı). Ayrıntılar ve 2026–27 tarihleri `01-PROJE-ANALIZI.md`'de hazır.
-2. Paket / ders hakkı takibi (8 / 12 derslik paketler, kalan hak, bitmek üzere uyarısı)
+2. Paket şablonları yönetimi, hakkı bitmek üzere otomatik bildirim
 3. Siteden gelen ön görüşme formlarının panele düşmesi
 4. Öğrenci için ödev takibi, sınav geri sayımı, Pomodoro, çalışma programı
 5. Eğitmen "Hakedişlerim" sayfası, sürükle-bırak ile erteleme, "haftayı kopyala"
