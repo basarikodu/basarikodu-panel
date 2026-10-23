@@ -4,6 +4,7 @@
 - **Logo:** `public/logo.png` (dairesel, şeffaf zemin); favicon `src/app/icon.png`.
 - **Renkler logodan alındı:** lacivert `#012E6A` → arayüz birincil `#0B3478`, yeşil `#2E8220`, beyaz; zemin soğuk beyaz `#F3F6FB`.
 - **Yerleşim (kurucunun paylaştığı referans ekrana göre):** yüzen, köşeleri 28px yuvarlatılmış koyu lacivert yan menü (logo, panel kartı, menü, altta kullanıcı kartı); büyük "Merhaba, Ad" başlığı + uzun tarih; koyu lacivert degrade istatistik bandı (cam efektli kutular); BÜYÜK HARF aralıklı bölüm etiketleri; beyaz, geniş yuvarlatılmış kartlar.
+- **Yazı tipi:** tüm panelde **Montserrat** (gövde ve başlıklar, kurucu kararı).
 - Bileşenler: `AppShell`, `HeroStats`, `SectionLabel`, `UserAvatar`, `Logo`.
 - Aşağıdaki tablo ilk taslaktır; güncel değerler `src/app/globals.css` içindedir.
 
@@ -26,7 +27,7 @@ Ana site ile **aynı markayı** taşıyan, sade ve "iş aleti" hissi veren bir p
 | `--border` | `#E6E4DC` | `#2A2A40` | |
 | `--radius` | 12px | | Sitedeki yuvarlak kart dili |
 
-Fontlar: **Plus Jakarta Sans** (başlık, sayılar), **DM Sans** (gövde) — `next/font/google`.
+Font: **Montserrat** (tüm metinler) — `next/font/google`.
 
 ## 3. Ders durumu renkleri
 | Durum | Renk | İkon |
