@@ -5,7 +5,9 @@ import { z } from "zod";
 import { ROLE_HOME } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 
-export type FormState = { error?: string; success?: string } | undefined;
+import type { ActionState } from "@/lib/action-state";
+
+export type FormState = ActionState;
 
 const loginSchema = z.object({
   email: z.email("Geçerli bir e-posta adresi girin"),

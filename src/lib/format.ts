@@ -87,3 +87,32 @@ export function shiftPeriod(kind: PeriodKind, ref: Date, step: number): Date {
   else local.setUTCMonth(local.getUTCMonth() + step);
   return new Date(local.getTime() - ISTANBUL_OFFSET_MS);
 }
+
+// Ay anahtarı: DB'deki student_packages.month ile aynı biçim ("2026-10-01").
+export type MonthKey = `${number}-${string}-01`;
+
+const MONTH_KEY_RE = /^\d{4}-(0[1-9]|1[0-2])-01$/;
+
+export function isMonthKey(value: unknown): value is MonthKey {
+  return typeof value === "string" && MONTH_KEY_RE.test(value);
+}
+
+/** İstanbul saatine göre verilen anın ayı. */
+export function toMonthKey(ref: Date = new Date()): MonthKey {
+  const local = new Date(ref.getTime() + ISTANBUL_OFFSET_MS);
+  const m = String(local.getUTCMonth() + 1).padStart(2, "0");
+  return `${local.getUTCFullYear()}-${m}-01` as MonthKey;
+}
+
+export function shiftMonthKey(key: MonthKey, step: number): MonthKey {
+  const [y, m] = key.split("-").map(Number);
+  const d = new Date(Date.UTC(y, m - 1 + step, 1));
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-01` as MonthKey;
+}
+
+/** "2026-10-01" → "Ekim 2026" */
+export function formatMonthKey(key: MonthKey): string {
+  const [y, m] = key.split("-").map(Number);
+  // Ayın ortası: saat dilimi kaymasından etkilenmez
+  return formatMonth(new Date(Date.UTC(y, m - 1, 15)));
+}
