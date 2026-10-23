@@ -71,6 +71,5 @@ export function readStudentForm(fd: FormData) {
 
 export const assignmentSchema = z.object({
   tutor_id: z.uuid("Eğitmen seçin"),
-  subject_id: z.uuid("Branş seçin"),
-  lesson_type: z.enum(["ozel_ders", "kocluk"]),
+  subject_ids: z.array(z.uuid()).min(1, "En az bir branş seçin"),
 });

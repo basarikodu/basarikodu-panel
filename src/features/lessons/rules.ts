@@ -98,3 +98,8 @@ export function canRequestChange(l: LessonState & { hasPendingChange?: boolean }
 export function canWithdraw(l: LessonState): boolean {
   return l.approval_status === "pending" || l.approval_status === "rejected";
 }
+
+/** Ders tipi branştan çıkar: "Koçluk" branşı koçluk, diğerleri özel ders */
+export function lessonTypeForSubject(subjectName: string): "ozel_ders" | "kocluk" {
+  return subjectName.trim().toLocaleLowerCase("tr") === "koçluk" ? "kocluk" : "ozel_ders";
+}

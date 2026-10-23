@@ -114,7 +114,7 @@ export default async function StudentDetailPage({ params }: PageProps<"/kurucu/o
             <CardTitle>Eğitmenleri</CardTitle>
             <FormDialog
               title="Eğitmen ata"
-              description="Eğitmen yalnızca atandığı öğrencileri görür ve onlara ders planlayabilir."
+              description="Eğitmeni ve öğrencinin ondan alacağı branşları seçin. Eğitmen ders planlarken bu branşlardan birini seçer."
               action={assignTutor.bind(null, id)}
               submitLabel="Ata"
               trigger={
@@ -123,7 +123,11 @@ export default async function StudentDetailPage({ params }: PageProps<"/kurucu/o
                 </Button>
               }
             >
-              <AssignFields subjects={subjects} tutors={tutors} />
+              <AssignFields
+                subjects={subjects}
+                tutors={tutors}
+                assigned={assignments.map((a) => `${a.tutor?.id}:${a.subject?.id}`)}
+              />
             </FormDialog>
           </CardHeader>
           <CardContent>

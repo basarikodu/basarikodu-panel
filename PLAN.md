@@ -115,6 +115,7 @@
 ## Netleşen kararlar (23 Eki 2026)
 - İlk sürüm **sade**: ders planlama–onay akışı + kurucu takibi. Ekstralar v1 sonrasına.
 - Öğrenci–eğitmen atamasını kurucular yapar; eğitmen yalnızca atanan öğrencileri görür ve ders planlar.
+- Bir öğrenci aynı eğitmenden birden fazla branş alabilir; branşları kurucular atar. "Ders planla"da önce öğrenci (yalnız ad), sonra branş seçilir; tekrar (seri) yok, her ders tek tek planlanır. Süre branştan sabit (özel ders 60, koçluk 40 dk; Ayarlar'dan). Aynı gün arka arkaya farklı branş dersleri planlanabilir (24 Eki 2026).
 - Eğitmenin ders oluşturma, erteleme ve iptali **kurucu onayına** bağlı; eğitmende "Onay bekliyor" yazar.
 - Ders sonucu (Tamamlandı / Öğrenci gelmedi) onaysız kaydedilir; kurucular düzeltebilir.
 - Öğrencinin hakkı yanmaz; yapılmayan ders ertelenir. Eğitmene yalnızca **tamamlanan** ders ödenir.

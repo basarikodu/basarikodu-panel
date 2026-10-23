@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { dbFail, fail, ok, zodFail, type ActionState } from "@/lib/action-state";
 import { requireRole } from "@/lib/auth";
+import { lessonTypeForSubject } from "@/features/lessons/rules";
 import { generateTempPassword } from "@/lib/password";
 import { createAdminClient, createClient } from "@/lib/supabase/server";
 import { assignmentSchema, readStudentForm, readTutorForm } from "./schemas";
@@ -222,22 +223,36 @@ export async function assignTutor(
   const me = await requireRole("founder");
   const parsed = assignmentSchema.safeParse({
     tutor_id: fd.get("tutor_id"),
-    subject_id: fd.get("subject_id"),
-    lesson_type: fd.get("lesson_type") ?? "ozel_ders",
+    subject_ids: fd.getAll("subject_ids"),
   });
   if (!parsed.success) return zodFail(parsed.error);
+  const { tutor_id, subject_ids } = parsed.data;
 
   const supabase = await createClient();
-  const { error } = await supabase
-    .from("tutor_students")
-    .insert({ ...parsed.data, student_id: studentId, assigned_by: me.id });
-  if (error) {
-    return error.code === "23505" ? fail("Bu eğitmen bu branşta zaten atanmış") : dbFail(error);
+  const { data: subjects, error: subjectError } = await supabase
+    .from("subjects")
+    .select("id, name")
+    .in("id", subject_ids);
+  if (subjectError) return dbFail(subjectError);
+
+  // Her branş ayrı eşleştirme; ders tipi branştan çıkar. Zaten atanmış branş atlanır.
+  let added = 0;
+  for (const subject of subjects ?? []) {
+    const { error } = await supabase.from("tutor_students").insert({
+      tutor_id,
+      student_id: studentId,
+      subject_id: subject.id,
+      lesson_type: lessonTypeForSubject(subject.name),
+      assigned_by: me.id,
+    });
+    if (error && error.code !== "23505") return dbFail(error);
+    if (!error) added++;
   }
+  if (!added) return fail("Seçilen branşlar bu eğitmenle zaten atanmış");
 
   revalidatePath(`/kurucu/ogrenciler/${studentId}`);
   revalidatePath("/kurucu/ogrenciler");
-  return ok("Eğitmen atandı");
+  return ok(added > 1 ? `${added} branş atandı` : "Branş atandı");
 }
 
 export async function removeAssignment(

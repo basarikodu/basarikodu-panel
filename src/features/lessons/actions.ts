@@ -15,15 +15,13 @@ function revalidateLessons() {
 }
 
 const planSchema = z.object({
-  assignment_id: z.uuid("Öğrenci ve branş seçin"),
+  assignment_id: z.uuid("Branş seçin"),
   date: z.string().refine(isDateKey, "Tarih seçin"),
   time: z.string().refine(isTimeValue, "Saat seçin"),
-  duration: z.coerce.number().int().min(15, "Süre en az 15 dk").max(240, "Süre en fazla 240 dk"),
-  weeks: z.coerce.number().int().min(1).max(16),
   meeting_url: z.url("Ders linki geçerli bir adres olmalı").nullable(),
 });
 
-/** Ders (veya haftalık tekrar eden seri) planlar. Eğitmenin dersleri onaya düşer. */
+/** Tek ders planlar; süre branşa göre Ayarlar'dan gelir. Eğitmenin dersi onaya düşer. */
 export async function planLessons(_prev: ActionState, fd: FormData): Promise<ActionState> {
   const me = await getCurrentProfile();
   if (!me || (me.role !== "tutor" && me.role !== "founder")) return fail("Yetkiniz yok");
@@ -32,25 +30,34 @@ export async function planLessons(_prev: ActionState, fd: FormData): Promise<Act
     assignment_id: formValue(fd, "assignment_id"),
     date: formValue(fd, "date"),
     time: formValue(fd, "time"),
-    duration: formValue(fd, "duration"),
-    weeks: formValue(fd, "weeks") ?? 1,
     meeting_url: formValue(fd, "meeting_url"),
   });
   if (!parsed.success) return zodFail(parsed.error);
   const input = parsed.data;
 
   const supabase = await createClient();
-  const { data: assignment } = await supabase
-    .from("tutor_students")
-    .select("tutor_id, student_id, subject_id, lesson_type, is_active")
-    .eq("id", input.assignment_id)
-    .maybeSingle();
+  const [{ data: assignment }, { data: settings }] = await Promise.all([
+    supabase
+      .from("tutor_students")
+      .select("tutor_id, student_id, subject_id, lesson_type, is_active")
+      .eq("id", input.assignment_id)
+      .maybeSingle(),
+    supabase
+      .from("app_settings")
+      .select("duration_private, duration_coaching")
+      .eq("id", 1)
+      .maybeSingle(),
+  ]);
   if (!assignment || !assignment.is_active) return fail("Bu öğrenci size atanmamış");
   if (me.role === "tutor" && assignment.tutor_id !== me.id)
     return fail("Bu öğrenci size atanmamış");
 
-  const occurrences = buildOccurrences(input.date, input.time, input.duration, input.weeks);
-  if (Date.parse(occurrences[0].starts_at) < Date.now() - 60_000 && me.role === "tutor") {
+  const duration =
+    assignment.lesson_type === "kocluk"
+      ? (settings?.duration_coaching ?? 40)
+      : (settings?.duration_private ?? 60);
+  const [lesson] = buildOccurrences(input.date, input.time, duration, 1);
+  if (Date.parse(lesson.starts_at) < Date.now() - 60_000 && me.role === "tutor") {
     return fail("Geçmiş bir saate ders planlanamaz");
   }
 
@@ -61,54 +68,27 @@ export async function planLessons(_prev: ActionState, fd: FormData): Promise<Act
     .or(`tutor_id.eq.${assignment.tutor_id},student_id.eq.${assignment.student_id}`)
     .eq("status", "planned")
     .neq("approval_status", "rejected")
-    .lt("starts_at", occurrences.at(-1)!.ends_at)
-    .gt("ends_at", occurrences[0].starts_at);
-  const conflicts = findConflicts(occurrences, existing ?? []);
-  if (conflicts.length) {
-    const list = conflicts
-      .slice(0, 3)
-      .map((c) => `${formatDate(c.starts_at)} ${formatTime(c.starts_at)}`)
-      .join(", ");
-    return fail(`Bu saatlerde başka ders var: ${list}${conflicts.length > 3 ? "…" : ""}`);
+    .lt("starts_at", lesson.ends_at)
+    .gt("ends_at", lesson.starts_at);
+  const [conflict] = findConflicts([lesson], existing ?? []);
+  if (conflict) {
+    return fail(
+      `Bu saatte başka ders var: ${formatDate(conflict.starts_at)} ${formatTime(conflict.starts_at)}`,
+    );
   }
 
-  let seriesId: string | null = null;
-  if (input.weeks > 1) {
-    const { data: series, error } = await supabase
-      .from("lesson_series")
-      .insert({
-        tutor_id: assignment.tutor_id,
-        student_id: assignment.student_id,
-        subject_id: assignment.subject_id,
-        lesson_type: assignment.lesson_type,
-        weeks: input.weeks,
-      })
-      .select("id")
-      .single();
-    if (error) return dbFail(error);
-    seriesId = series.id;
-  }
-
-  const { error } = await supabase.from("lessons").insert(
-    occurrences.map((o) => ({
-      ...o,
-      series_id: seriesId,
-      tutor_id: assignment.tutor_id,
-      student_id: assignment.student_id,
-      subject_id: assignment.subject_id,
-      lesson_type: assignment.lesson_type,
-      meeting_url: input.meeting_url,
-    })),
-  );
-  if (error) {
-    if (seriesId) await supabase.from("lesson_series").delete().eq("id", seriesId);
-    return dbFail(error);
-  }
+  const { error } = await supabase.from("lessons").insert({
+    ...lesson,
+    tutor_id: assignment.tutor_id,
+    student_id: assignment.student_id,
+    subject_id: assignment.subject_id,
+    lesson_type: assignment.lesson_type,
+    meeting_url: input.meeting_url,
+  });
+  if (error) return dbFail(error);
 
   revalidateLessons();
-  const n = occurrences.length;
-  if (me.role === "founder") return ok(n > 1 ? `${n} ders eklendi` : "Ders eklendi");
-  return ok(n > 1 ? `${n} ders kurucu onayına gönderildi` : "Ders kurucu onayına gönderildi");
+  return ok(me.role === "founder" ? "Ders eklendi" : "Ders kurucu onayına gönderildi");
 }
 
 const changeSchema = z.discriminatedUnion("request_type", [
