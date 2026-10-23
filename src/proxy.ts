@@ -4,20 +4,17 @@ import { NextResponse, type NextRequest } from "next/server";
 // Oturum çerezlerini yeniler ve oturumsuz kullanıcıyı giriş sayfasına yönlendirir.
 // Rol kontrolü sayfa/layout'larda requireRole() ile, asıl güvenlik RLS'dedir.
 
-const PUBLIC_PATHS = [
-  "/",
-  "/giris/ogrenci",
-  "/giris/egitmen",
-  "/kurucu/giris",
-  "/sifremi-unuttum",
-  "/vitrin",
+/** Oturum gerektiren panel alanları ve giriş sayfaları (diğer adresler serbest; yoksa 404) */
+const PROTECTED: { prefix: string; login: string }[] = [
+  { prefix: "/kurucu", login: "/kurucu/giris" },
+  { prefix: "/egitmen", login: "/giris/egitmen" },
+  { prefix: "/ogrenci", login: "/giris/ogrenci" },
 ];
 
-function loginPathFor(pathname: string) {
-  if (pathname.startsWith("/kurucu")) return "/kurucu/giris";
-  if (pathname.startsWith("/egitmen")) return "/giris/egitmen";
-  if (pathname.startsWith("/ogrenci")) return "/giris/ogrenci";
-  return "/";
+function loginPathFor(pathname: string): string | null {
+  if (pathname === "/kurucu/giris") return null;
+  const area = PROTECTED.find((p) => pathname === p.prefix || pathname.startsWith(`${p.prefix}/`));
+  return area?.login ?? null;
 }
 
 export async function proxy(request: NextRequest) {
@@ -42,12 +39,11 @@ export async function proxy(request: NextRequest) {
   const { data } = await supabase.auth.getClaims();
   const isLoggedIn = Boolean(data?.claims?.sub);
 
-  const { pathname } = request.nextUrl;
-  const isPublic = PUBLIC_PATHS.includes(pathname) || pathname.startsWith("/auth/");
+  const login = loginPathFor(request.nextUrl.pathname);
 
-  if (!isLoggedIn && !isPublic && pathname !== "/sifre-belirle") {
+  if (!isLoggedIn && login) {
     const url = request.nextUrl.clone();
-    url.pathname = loginPathFor(pathname);
+    url.pathname = login;
     url.search = "";
     return NextResponse.redirect(url);
   }
