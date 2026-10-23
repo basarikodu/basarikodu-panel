@@ -4,7 +4,7 @@
 
 | Katman | Seçim | Neden |
 |---|---|---|
-| Framework | **Next.js 15 (App Router) + TypeScript** | Mevcut site de Next.js; tek kod tabanında 3 panel; Server Actions ile ayrı API yazmaya gerek yok |
+| Framework | **Next.js 16 (App Router, Cache Components) + TypeScript** | Mevcut site de Next.js; tek kod tabanında 3 panel; Server Actions ile ayrı API yazmaya gerek yok |
 | UI | **Tailwind CSS v4 + shadcn/ui** (Radix) | Hızlı, erişilebilir, profesyonel bileşenler; marka renklerine kolay uyarlanır |
 | İkonlar | lucide-react | shadcn ile uyumlu |
 | Veritabanı + Auth | **Supabase** (PostgreSQL, Auth, Row Level Security) | Hazır kimlik doğrulama + davet e-postası, rol bazlı güvenlik DB'de, ücretsiz başlangıç planı, yönetilen yedekleme |
@@ -53,7 +53,7 @@ src/
     format.ts                 # TL, tarih, saat formatları
     constants.ts
   types/database.ts           # supabase gen types çıktısı
-middleware.ts                 # Oturum yenileme + rol bazlı yönlendirme
+proxy.ts                      # (Next 16: eski adıyla middleware) oturum yenileme + rol yönlendirme
 supabase/
   migrations/                 # SQL migration dosyaları (versiyonlu)
   seed.sql                    # Branşlar, paketler, 2026-27 akademik takvim, demo veri
@@ -69,8 +69,8 @@ supabase/
 - Kurucu yeni kullanıcı ekler → sunucu tarafında `service_role` ile `auth.admin.inviteUserByEmail` → kullanıcı `/sifre-belirle` sayfasında şifresini oluşturur.
 - Davet ve şifre sıfırlama e-postaları **`panel@basarikodu.com`** adresinden gider: Supabase Auth → özel SMTP (Resend), `basarikodu.com` için SPF/DKIM DNS kayıtları, Türkçe e-posta şablonları.
 - Rol bilgisi `profiles.role` tablosunda; JWT custom claim (Auth Hook) ile token'a da yazılır → RLS politikaları hızlı çalışır.
-- `middleware.ts`: oturumsuz → giriş sayfasına; `/kurucu/*` yalnızca founder, `/egitmen/*` yalnızca tutor, `/ogrenci/*` yalnızca student.
-- **Asıl güvenlik RLS'dedir**; middleware sadece yönlendirme kolaylığıdır.
+- `src/proxy.ts`: oturumsuz → giriş sayfasına; `/kurucu/*` yalnızca founder, `/egitmen/*` yalnızca tutor, `/ogrenci/*` yalnızca student.
+- **Asıl güvenlik RLS'dedir**; proxy sadece yönlendirme kolaylığıdır.
 - `service_role` anahtarı yalnızca sunucuda, yalnızca kullanıcı oluşturma işlemlerinde kullanılır.
 
 ## 4. Kritik iş kuralları

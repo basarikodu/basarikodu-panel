@@ -16,8 +16,8 @@
 
 | Faz | Kapsam | Durum |
 |---|---|---|
-| 0 | Kurulum & tasarım temeli | ⏳ |
-| 1 | Veritabanı, giriş, roller, panel iskeletleri | ⬜ |
+| 0 | Kurulum & tasarım temeli | ✅ (GitHub/Vercel/Supabase hesapları bekliyor) |
+| 1 | Veritabanı, giriş, roller, panel iskeletleri | ⏳ |
 | 2 | Kurucu: eğitmen & öğrenci yönetimi, atama, **aylık paket / ders hakkı** | ⬜ |
 | 3 | Eğitmen ders planlama + kurucu onay akışı | ⬜ |
 | 4 | Öğrenci / veli paneli (ders hakkı kartı dahil) → **pilot** | ⬜ |
@@ -33,12 +33,13 @@
 ---
 
 ## Faz 0 — Kurulum & Tasarım Temeli (1 gün)
-- [ ] Next.js 15 + TypeScript (strict) + Tailwind + ESLint/Prettier
-- [ ] shadcn/ui + marka renkleri ve fontları ([05-TASARIM.md](docs/05-TASARIM.md)), yalnızca açık tema
-- [ ] Ortak bileşenler: `PageHeader`, `StatCard`, `StatusBadge`, `MoneyText`, `EmptyState`
-- [ ] `lib/format.ts` (TL, tarih, saat — tr-TR, Europe/Istanbul) + testleri
-- [ ] Vitest kurulumu; Supabase projesi + local CLI; `.env.example`
-- [ ] GitHub repo + Vercel önizleme deploy'u
+- [x] Next.js 16 + TypeScript (strict) + Tailwind v4 + ESLint/Prettier
+- [x] shadcn/ui + marka renkleri ve fontları ([05-TASARIM.md](docs/05-TASARIM.md)), yalnızca açık tema
+- [x] Ortak bileşenler: `Logo`, `PageHeader`, `StatCard`, `StatusBadge`, `MoneyText`, `EmptyState`
+- [x] `lib/format.ts` (TL, tarih, saat — tr-TR, Europe/Istanbul) + testleri
+- [x] Vitest kurulumu; `.env.example`
+- [ ] Supabase projesi + local CLI → Faz 1 başında (hesap onayı)
+- [ ] GitHub repo + Vercel önizleme deploy'u → hesaplar bağlanınca
 **Bitti:** Markalı boş uygulama Vercel'de açılıyor; lint/typecheck/test yeşil.
 **Commit:** `feat(faz-0): proje iskeleti ve tasarım temeli`
 
