@@ -1,11 +1,13 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { dbFail, fail, ok, zodFail, type ActionState } from "@/lib/action-state";
 import { requireRole } from "@/lib/auth";
 import { lessonTypeForSubject } from "@/features/lessons/rules";
 import { generateTempPassword } from "@/lib/password";
 import { createAdminClient, createClient } from "@/lib/supabase/server";
+import { studentDeleteBlocker } from "./rules";
 import { assignmentSchema, readStudentForm, readTutorForm } from "./schemas";
 
 const BAN_FOREVER = "876000h"; // ~100 yıl
@@ -203,6 +205,32 @@ export async function setAccountActive(id: string, active: boolean): Promise<Act
 
   revalidatePath("/kurucu", "layout");
   return ok(active ? "Hesap yeniden aktif edildi" : "Hesap pasife alındı; artık giriş yapamaz");
+}
+
+/** Öğrenciyi kalıcı siler (hesap, profil, paketler, atamalar, notlar). Ders/tahsilat geçmişi varsa engellenir. */
+export async function deleteStudent(id: string): Promise<ActionState> {
+  await requireRole("founder");
+  const supabase = await createClient();
+  const [{ data: student }, lessons, payments] = await Promise.all([
+    supabase.from("profiles").select("role").eq("id", id).maybeSingle(),
+    supabase.from("lessons").select("id", { count: "exact", head: true }).eq("student_id", id),
+    supabase.from("payments").select("id", { count: "exact", head: true }).eq("student_id", id),
+  ]);
+  if (student?.role !== "student") return fail("Öğrenci bulunamadı");
+  if (lessons.error || payments.error) return dbFail(lessons.error ?? payments.error!);
+
+  const blocker = studentDeleteBlocker({
+    lessons: lessons.count ?? 0,
+    payments: payments.count ?? 0,
+  });
+  if (blocker) return fail(blocker);
+
+  // auth.users silinince profiles → students → paket/atama/not kayıtları zincirleme silinir
+  const { error } = await createAdminClient().auth.admin.deleteUser(id);
+  if (error) return fail("Öğrenci silinemedi");
+
+  revalidatePath("/kurucu", "layout");
+  redirect("/kurucu/ogrenciler");
 }
 
 export async function resetPassword(id: string): Promise<ActionState> {

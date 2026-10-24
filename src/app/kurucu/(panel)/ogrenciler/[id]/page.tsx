@@ -22,6 +22,7 @@ import { deletePackage, savePackage } from "@/features/packages/actions";
 import { PaymentFields } from "@/components/founder/payment-fields";
 import {
   assignTutor,
+  deleteStudent,
   removeAssignment,
   resetPassword,
   setAccountActive,
@@ -193,6 +194,19 @@ export default async function StudentDetailPage({ params }: PageProps<"/kurucu/o
                 onSetActive={setAccountActive.bind(null, id)}
                 onResetPassword={resetPassword.bind(null, id)}
               />
+            </div>
+            <div className="mt-2 border-t pt-4">
+              <ActionButton
+                size="sm"
+                variant="destructive"
+                action={deleteStudent.bind(null, id)}
+                confirmTitle={`${p.full_name} kalıcı olarak silinsin mi?`}
+                confirmText="Hesap, paketler, atamalar ve notlar silinir; geri alınamaz. Ders veya tahsilat geçmişi olan öğrenci silinmez, pasife alınmalıdır."
+                confirmLabel="Kalıcı olarak sil"
+                destructive
+              >
+                <Trash2Icon className="size-4" /> Öğrenciyi sil
+              </ActionButton>
             </div>
           </CardContent>
         </Card>
