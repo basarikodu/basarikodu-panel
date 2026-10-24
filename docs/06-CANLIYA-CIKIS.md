@@ -2,24 +2,14 @@
 
 Panel kodu hazır ve test edildi (birim testleri, 26 yetki testi, 16 uçtan uca test). Canlıya çıkmak için aşağıdaki adımlar sırayla yapılır. ✋ işaretli adımlar kurucuların hesabıyla yapılmalıdır (şifre/anahtar girişi içerir).
 
-## 1. Vercel'e yükleme ✋
-1. BaşarıKodu'nun Vercel hesabıyla giriş yapın (yoksa `basarikodupanel` GitHub hesabıyla ücretsiz açın).
-2. **Add New → Project → Import** ile `basarikodupanel/basarikodu-panel` deposunu seçin. Framework: Next.js (otomatik).
-3. **Environment Variables** (Production + Preview):
+## 1. Vercel ✅ (24 Eki 2026)
+- Hesap: BaşarıKodu Vercel (basarikodu0@gmail.com), ekip **basari-kodus-projects**, proje **basarikodu-panel**.
+- Depo: `basarikodu/basarikodu-panel` (basarikodupanel hesabından taşındı; ana site `basarikodu/asil_basarikodu`). `main`'e her gönderim otomatik yayınlanır.
+- Sunucu bölgesi: **dub1** (Dublin) — Supabase eu-west-1 ile aynı bölge.
+- Ortam değişkenleri: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` (publishable), `NEXT_PUBLIC_SITE_URL`, `SUPABASE_SERVICE_ROLE_KEY` (Secret, kurucular girdi).
 
-| Ad | Değer |
-|---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | `https://kovudcedviefphsesxby.supabase.co` |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase → Project Settings → API Keys → **publishable** anahtar |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase → API Keys → **secret** anahtar (asla paylaşmayın) |
-| `NEXT_PUBLIC_SITE_URL` | `https://panel.basarikodu.com` |
-
-4. **Deploy**. Her `main` güncellemesi otomatik yeniden yayınlanır.
-
-## 2. Alan adı: panel.basarikodu.com ✋
-1. Vercel → Project → **Settings → Domains → Add** → `panel.basarikodu.com`.
-2. `basarikodu.com` DNS panelinde (alan adını aldığınız firma): **CNAME** kaydı → ad: `panel`, değer: `cname.vercel-dns.com`.
-3. Birkaç dakika içinde Vercel SSL sertifikasını otomatik kurar.
+## 2. Alan adı ✅
+- basarikodu.com Vercel'den alındı ve DNS'i Vercel'de; `panel.basarikodu.com` projeye eklendi, kayıt ve SSL otomatik. Ana site (basarikodu.com) ayrı projede, etkilenmez.
 
 ## 3. Supabase giriş ayarları ✋
 Supabase Dashboard → **Authentication**:
@@ -51,8 +41,8 @@ Hesaplar geçici şifreyle açıldığı için e-posta yalnızca **"Şifremi unu
 - Hatalar: Vercel → Project → **Logs**; veritabanı: Supabase → **Logs**.
 
 ## Kontrol listesi
-- [ ] Vercel projesi ve ortam değişkenleri
-- [ ] panel.basarikodu.com DNS + SSL
+- [x] Vercel projesi ve ortam değişkenleri
+- [x] panel.basarikodu.com DNS + SSL
 - [ ] Supabase: kayıt kapalı, Site URL, Redirect URLs
 - [ ] SMTP (panel@basarikodu.com) — şifremi unuttum için
 - [ ] Kurucu hesapları açıldı
