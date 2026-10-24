@@ -43,7 +43,7 @@ Hesaplar geçici şifreyle açıldığı için e-posta yalnızca **"Şifremi unu
 ## Kontrol listesi
 - [x] Vercel projesi ve ortam değişkenleri
 - [x] panel.basarikodu.com DNS + SSL
-- [ ] Supabase: kayıt kapalı, Site URL, Redirect URLs
+- [x] Supabase: kayıt kapalı, Site URL, Redirect URLs
 - [ ] SMTP (panel@basarikodu.com) — şifremi unuttum için
 - [ ] Kurucu hesapları açıldı
 - [ ] Demo veriler silindi
