@@ -18,15 +18,15 @@ Supabase Dashboard → **Authentication**:
 - **Redirect URLs:** `https://panel.basarikodu.com/**` ve geliştirme için `http://localhost:3000/**`
 - **Password security → Leaked password protection:** açık (planınız destekliyorsa).
 
-## 4. panel@basarikodu.com e-postası (şifremi unuttum için) ✋
-Hesaplar geçici şifreyle açıldığı için e-posta yalnızca **"Şifremi unuttum"** akışında gerekir. Supabase'in yerleşik e-postası yalnızca proje ekibine mail atar; gerçek kullanıcılar için özel SMTP gerekir:
-1. [resend.com](https://resend.com) hesabı açın → **Domains → Add** → `basarikodu.com`.
-2. Resend'in verdiği DNS kayıtlarını (SPF/DKIM TXT, MX) `basarikodu.com` DNS paneline ekleyin, doğrulanmasını bekleyin.
-3. Resend → **API Keys** → yeni anahtar.
-4. Supabase → Authentication → **SMTP Settings → Enable custom SMTP**:
+## 4. panel@basarikodu.com e-postası (şifremi unuttum için)
+Hesaplar geçici şifreyle açıldığı için e-posta yalnızca **"Şifremi unuttum"** akışında gerekir.
+1. ✅ Resend hesabı (basarikodu0@gmail.com), alan adı `basarikodu.com`, bölge eu-west-1. DNS kayıtları (`send`, `rsend` CNAME, `resend._domainkey` TXT) Vercel DNS'ine Resend–Vercel bağlantısıyla eklendi.
+2. ✋ Resend → **API Keys** → "Sending access", alan adı basarikodu.com.
+3. ✋ Supabase → Authentication → **Emails → SMTP Settings → Enable custom SMTP**:
    - Sender email: `panel@basarikodu.com`, Sender name: `BaşarıKodu`
    - Host: `smtp.resend.com`, Port: `465`, Username: `resend`, Password: Resend API anahtarı
-5. Authentication → **Email Templates → Reset Password**: konu "BaşarıKodu Panel – Şifre yenileme"; metni Türkçe yazın, bağlantı olarak `{{ .ConfirmationURL }}` kalsın.
+4. ✋ Authentication → **Emails → Templates → Reset Password**: konu `BaşarıKodu Panel – Şifre yenileme`, gövde `supabase/templates/sifre-sifirlama.html`. Bağlantı `{{ .SiteURL }}/auth/confirm?token_hash=…&type=recovery` biçimindedir; kişi isteği bir cihazdan yapıp e-postayı başka cihazda açsa da çalışır.
+5. `panel@basarikodu.com` gelen posta almaz (alan adında posta kutusu yok).
 
 ## 5. Gerçek veriye geçiş
 1. **Kurucu hesapları:** `scripts/kurucular.example.json` → `scripts/kurucular.local.json` olarak doldurulur, `node scripts/kurucu-hesaplari.mjs` çalıştırılır. Geçici şifreler git'e girmeyen `scripts/kurucular-sifreler.local.md` dosyasına yazılır (kurucu hesabını panelden açma özelliği bilinçli olarak yok).
@@ -44,7 +44,7 @@ Hesaplar geçici şifreyle açıldığı için e-posta yalnızca **"Şifremi unu
 - [x] Vercel projesi ve ortam değişkenleri
 - [x] panel.basarikodu.com DNS + SSL
 - [x] Supabase: kayıt kapalı, Site URL, Redirect URLs
-- [ ] SMTP (panel@basarikodu.com) — şifremi unuttum için
+- [ ] SMTP (panel@basarikodu.com) — şifremi unuttum için (DNS ✅, Supabase ayarı bekliyor)
 - [ ] Kurucu hesapları açıldı
 - [ ] Demo veriler silindi
 - [ ] Ayarlar: gerçek ücret ve fiyatlar

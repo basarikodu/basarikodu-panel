@@ -1,0 +1,33 @@
+<!-- Supabase → Authentication → Email Templates → Reset Password
+     Konu: BaşarıKodu Panel – Şifre yenileme
+     Bağlantı token_hash ile /auth/confirm'e gider: istek hangi cihazdan yapılmış olursa olsun çalışır. -->
+<div style="margin:0;padding:32px 16px;background:#f3f6fb;font-family:Montserrat,Arial,Helvetica,sans-serif;color:#0d1b3e">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;margin:0 auto;background:#ffffff;border-radius:20px;overflow:hidden;border:1px solid #e3e9f3">
+    <tr>
+      <td style="background:#0b1a40;padding:24px 28px">
+        <span style="font-size:20px;font-weight:800;color:#ffffff">Başarı</span><span style="font-size:20px;font-weight:800;color:#6fc25a">Kodu</span>
+        <div style="margin-top:4px;font-size:12px;color:#c9d3ea">Özel Ders &amp; Koçluk Paneli</div>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:28px">
+        <h1 style="margin:0 0 12px;font-size:20px;font-weight:800">Şifre yenileme</h1>
+        <p style="margin:0 0 20px;font-size:14px;line-height:1.6;color:#5b6785">
+          BaşarıKodu Panel hesabınız için şifre yenileme isteği aldık. Yeni şifrenizi belirlemek için aşağıdaki düğmeye tıklayın.
+        </p>
+        <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&amp;type=recovery"
+           style="display:inline-block;background:#0b3478;color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;padding:12px 22px;border-radius:12px">
+          Yeni şifre belirle
+        </a>
+        <p style="margin:20px 0 0;font-size:12px;line-height:1.6;color:#5b6785">
+          Bağlantı 1 saat geçerlidir ve yalnızca bir kez kullanılabilir. Bu isteği siz yapmadıysanız e-postayı yok sayabilirsiniz; şifreniz değişmez.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:16px 28px;border-top:1px solid #e3e9f3;font-size:11px;color:#8892a4">
+        © BaşarıKodu · panel.basarikodu.com
+      </td>
+    </tr>
+  </table>
+</div>
