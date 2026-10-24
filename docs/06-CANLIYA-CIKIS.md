@@ -21,11 +21,11 @@ Supabase Dashboard → **Authentication**:
 ## 4. panel@basarikodu.com e-postası (şifremi unuttum için)
 Hesaplar geçici şifreyle açıldığı için e-posta yalnızca **"Şifremi unuttum"** akışında gerekir.
 1. ✅ Resend hesabı (basarikodu0@gmail.com), alan adı `basarikodu.com`, bölge eu-west-1. DNS kayıtları (`send`, `rsend` CNAME, `resend._domainkey` TXT) Vercel DNS'ine Resend–Vercel bağlantısıyla eklendi.
-2. ✋ Resend → **API Keys** → "Sending access", alan adı basarikodu.com.
-3. ✋ Supabase → Authentication → **Emails → SMTP Settings → Enable custom SMTP**:
+2. ✅ Resend → **API Keys** → "Sending access", alan adı basarikodu.com.
+3. ✅ Supabase → Authentication → **Emails → SMTP Settings → Enable custom SMTP**:
    - Sender email: `panel@basarikodu.com`, Sender name: `BaşarıKodu`
    - Host: `smtp.resend.com`, Port: `465`, Username: `resend`, Password: Resend API anahtarı
-4. ✋ Authentication → **Emails → Templates → Reset Password**: konu `BaşarıKodu Panel – Şifre yenileme`, gövde `supabase/templates/sifre-sifirlama.html`. Bağlantı `{{ .SiteURL }}/auth/confirm?token_hash=…&type=recovery` biçimindedir; kişi isteği bir cihazdan yapıp e-postayı başka cihazda açsa da çalışır.
+4. ✅ Authentication → **Emails → Templates → Reset Password**: konu `BaşarıKodu Panel – Şifre yenileme`, gövde `supabase/templates/sifre-sifirlama.html`. Bağlantı `{{ .SiteURL }}/auth/confirm?token_hash=…&type=recovery` biçimindedir; kişi isteği bir cihazdan yapıp e-postayı başka cihazda açsa da çalışır.
 5. `panel@basarikodu.com` gelen posta almaz (alan adında posta kutusu yok).
 
 ## 5. Gerçek veriye geçiş
@@ -44,7 +44,7 @@ Hesaplar geçici şifreyle açıldığı için e-posta yalnızca **"Şifremi unu
 - [x] Vercel projesi ve ortam değişkenleri
 - [x] panel.basarikodu.com DNS + SSL
 - [x] Supabase: kayıt kapalı, Site URL, Redirect URLs
-- [ ] SMTP (panel@basarikodu.com) — şifremi unuttum için (DNS ✅, Supabase ayarı bekliyor)
+- [x] SMTP (panel@basarikodu.com) — şifremi unuttum için
 - [ ] Kurucu hesapları açıldı
 - [ ] Demo veriler silindi
 - [ ] Ayarlar: gerçek ücret ve fiyatlar
